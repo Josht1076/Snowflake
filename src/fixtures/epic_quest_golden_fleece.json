@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-epic-quest",
+  "title": "The Quest for the Golden Fleece",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "primaryGenreId": "transformative-quest",
+  "secondaryGenreIds": ["power-with-price"],
+  "primaryStcId": null,
+  "secondaryStcId": null,
+  "snowflakeContent": {
+    "sf_step_1": {
+      "stepId": "sf_step_1",
+      "text": "A young hero must journey across dangerous lands to retrieve a legendary artifact that can save their kingdom.",
+      "status": "complete"
+    },
+    "sf_step_2": {
+      "stepId": "sf_step_2",
+      "text": "The hero lives in a peaceful kingdom threatened by an ancient curse. When the curse begins to spread, they must leave home to find the Golden Fleece, the only artifact that can break it. Their first disaster comes when they lose their guide in the Whispering Woods. The second disaster strikes when they are betrayed by a trusted companion at the Mountain of Trials. The third disaster occurs when the artifact is stolen just as they reach the temple. In the end, they must face the true source of the curse and make a sacrifice to save their kingdom.",
+      "status": "in_progress"
+    }
+  },
+  "stcContent": {
+    "stc_opening_image": {
+      "beatId": "stc_opening_image",
+      "text": "The hero watches their peaceful kingdom from a hilltop, unaware of the darkness approaching.",
+      "status": "complete"
+    },
+    "stc_catalyst": {
+      "beatId": "stc_catalyst",
+      "text": "The curse begins to spread, turning the land dark and threatening all life.",
+      "status": "complete"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "The Peaceful Kingdom",
+      "briefPurpose": "Establish the hero's world and the threat of the curse",
+      "relatedSnowflakeStepId": "sf_step_2",
+      "relatedStcBeatId": "stc_opening_image"
+    },
+    {
+      "id": "scene-2",
+      "title": "The Call to Adventure",
+      "briefPurpose": "Hero learns they must find the Golden Fleece",
+      "relatedSnowflakeStepId": "sf_step_2",
+      "relatedStcBeatId": "stc_catalyst"
+    }
+  ]
+}
+

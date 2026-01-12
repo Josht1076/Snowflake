@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-mystery",
+  "title": "The Hidden Truth",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "primaryGenreId": "buried-truth",
+  "secondaryGenreIds": ["converging-destinies"],
+  "primaryStcId": null,
+  "secondaryStcId": null,
+  "snowflakeContent": {
+    "sf_step_1": {
+      "stepId": "sf_step_1",
+      "text": "A detective must uncover the truth behind a series of murders that reveal a conspiracy spanning decades.",
+      "status": "complete"
+    },
+    "sf_step_2": {
+      "stepId": "sf_step_2",
+      "text": "A detective investigates a murder that seems straightforward, but clues point to something deeper. The first disaster: a key witness is killed before they can testify. The second disaster: the detective discovers they've been investigating the wrong person all along. The third disaster: the conspiracy reaches into the highest levels of power, putting the detective's life in danger. In the end, the detective must expose the truth, even if it means sacrificing everything.",
+      "status": "in_progress"
+    }
+  },
+  "stcContent": {
+    "stc_opening_image": {
+      "beatId": "stc_opening_image",
+      "text": "A crime scene, seemingly simple, but something feels off.",
+      "status": "complete"
+    },
+    "stc_catalyst": {
+      "beatId": "stc_catalyst",
+      "text": "The first clue that suggests this is more than a simple murder.",
+      "status": "complete"
+    }
+  },
+  "scenes": []
+}
+

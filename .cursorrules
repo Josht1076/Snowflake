@@ -1,0 +1,287 @@
+# Snowflake + STC Novel Planning App - Cursor Rules
+
+## Project Overview
+This is a personal novel planning application that combines the Snowflake Method (primary framework) with Save the Cat beat sheets (secondary guidance). The app is offline-first, local-only, and designed for a modern, intuitive user experience.
+
+## Core Principles
+
+### Framework Hierarchy
+- **Snowflake Method is PRIMARY** - The main structure and workflow
+- **Save the Cat is SECONDARY** - Overlay guidance, not mandatory
+- Both frameworks should be represented as separate, modular systems with a mapping layer
+- Never force users to choose one over the other; they work together
+
+### User Experience
+- Keep it simple, modern, and intuitive
+- Support manual editing at every step
+- Nothing should be "locked" - everything is revisable
+- Neutral tone in all guidance text
+- Simple examples only (no complex templates)
+- Focus on strong UX over feature bloat
+
+### Data Model
+- Use TypeScript for all type definitions
+- Implement schema versioning from the start (`schemaVersion` field)
+- Always run migration hooks when loading data
+- Keep frameworks, mappings, genres, tips, and quiz data in separate data files
+- Use JSON export/import for project data
+
+## Code Organization
+
+### File Structure
+```
+/src
+  /data
+    /frameworks
+      - snowflake.ts
+      - stc.ts
+      - mapping_snowflake_stc.ts
+    /genres.ts
+    /tips.ts
+    /quiz
+      - module1.ts
+  /types
+    - project.ts
+    - frameworks.ts
+    - characters.ts
+    - scenes.ts
+  /components
+    /discovery
+    /structure
+    /revision
+  /hooks
+  /utils
+    - migrations.ts
+    - storage.ts
+  /fixtures
+    - *.json (sample projects for testing)
+```
+
+### Framework Abstraction
+- Define a generic `Framework` interface for both Snowflake and STC
+- Use `FrameworkId = 'snowflake' | 'stc'`
+- Keep framework definitions in `/data/frameworks/`
+- Mapping between frameworks should be separate and explicit
+- Framework steps should have: `id`, `frameworkId`, `title`, `description`, `order`, `group?`
+
+### Project Schema
+- Always include `schemaVersion: number` in Project interface
+- Use `migrateProject()` function when loading from storage
+- Project should have separate sections for:
+  - `snowflakeContent: Record<string, SnowflakeStepContent>`
+  - `stcContent: Record<string, StcBeatContent>`
+  - `scenes: SceneCard[]`
+  - Genre and STC archetype selections
+
+## TypeScript Guidelines
+
+### Type Safety
+- Use strict TypeScript settings
+- Define enums for: `SnowflakeStepNumber`, `SaveTheCatBeatType`, `StoryAct`, `CharacterRole`, `DraftStatus`
+- Use discriminated unions where appropriate
+- Avoid `any` - use `unknown` if type is truly unknown
+
+### Interfaces
+- Prefix framework-specific types clearly: `SnowflakeStepContent`, `StcBeatContent`
+- Use consistent naming: `*Content`, `*State`, `*Config`
+- Keep interfaces focused and composable
+
+## UI/UX Patterns
+
+### Three Modes
+1. **Discovery Mode**: Genre selection, quiz (optional), initial project setup
+2. **Structure Mode**: Main workspace with Snowflake steps, STC overlay, scene cards
+3. **Revision Mode**: Health check pass with simple rule-based validations
+
+### Layout Principles
+- Left sidebar: Navigation (Snowflake steps, Scenes)
+- Main panel: Current step/beat editor
+- Right sidebar: Tips & Notes (contextual based on step + genre + STC archetype)
+- Top: Timeline ribbon showing Acts I/II/III with STC beat markers
+
+### Tip Engine
+- Primary tips: Based on Snowflake step + primary STC archetype + primary genre
+- Secondary tips: If secondary STC exists, show as "alternate angle" notes
+- All tips should be neutral tone, simple examples
+- Tips should be filterable by: `appliesToFrameworkSteps`, `appliesToGenres`, `appliesToPrimaryStc`, `appliesToSecondaryStc`
+
+### Scene Cards
+- Keep minimal: `id`, `title`, `briefPurpose`, `relatedStep?`, `stcBeatId?`
+- This is planning-level, not drafting text
+- Simple list + detail panel for editing
+
+## Development Practices
+
+### Storage
+- Use localStorage or IndexedDB for persistence
+- Implement autosave (every few seconds)
+- Always validate data structure on load
+- Support JSON export/import for backups
+
+### Content Separation
+- Keep all static content (framework definitions, tips, quiz questions) in data files
+- UI should import these as configuration
+- This allows content updates without code changes
+
+### Testing
+- Use fixture data (`/fixtures/*.json`) for:
+  - UI rendering tests
+  - Validating framework mappings
+  - Tuning tips and guidance
+
+### Versioning
+- Start with `schemaVersion = 1` for all new projects
+- Migration function should handle version upgrades gracefully
+- Future-proof the migration system even if no migrations exist yet
+
+## Code Style
+
+### Naming Conventions
+- Components: PascalCase (`SnowflakeStepEditor.tsx`)
+- Files: kebab-case for data/config (`snowflake.ts`, `mapping_snowflake_stc.ts`)
+- Types/Interfaces: PascalCase (`Project`, `SnowflakeStepContent`)
+- Functions: camelCase (`migrateProject`, `getTipsForStep`)
+- Constants: UPPER_SNAKE_CASE for enums, camelCase for config objects
+
+### React Patterns
+- Use functional components with hooks
+- Keep components focused and composable
+- Extract reusable logic into custom hooks
+- Use context for project state management (or React Query for CRUD)
+
+### Comments
+- Document framework mappings and complex logic
+- Explain why, not what (code should be self-documenting)
+- Add JSDoc comments for public APIs and data structures
+
+## Framework-Specific Rules
+
+### Snowflake Method
+- Steps 1-8 are core (Step 9-10 are optional)
+- Each step should track: `status`, `text`, `stepId`
+- Steps 3, 7, 8 can reference STC beats inline
+- Allow jumping between steps freely
+
+### Save the Cat
+- Beats should be represented as a separate framework
+- Mapping shows which beats relate to which Snowflake steps
+- Primary STC archetype drives main tips
+- Secondary STC archetype provides alternate angles
+- Beat instances should track: `summary`, `sceneIds`, `status`, `notes`
+
+### Genre Quiz
+- Module 1: 20 questions (core identity)
+- Additional modules: 5 questions each
+- Results generate top-scoring genres and STC archetypes
+- Fully editable after completion
+- Results are suggestions, not locked
+
+## Performance & Optimization
+
+### Data Loading
+- Lazy load framework definitions and tips
+- Cache frequently accessed data
+- Minimize re-renders with proper React patterns
+
+### Storage
+- Debounce autosave operations
+- Use IndexedDB for larger projects (if needed)
+- Implement efficient serialization/deserialization
+
+## Future Considerations
+
+### Extensibility
+- Design for future features: version history, multi-project dashboard, expanded scene builder
+- Keep data model flexible for additions
+- Don't over-engineer, but leave room for growth
+
+### Accessibility
+- Ensure keyboard navigation works
+- Use semantic HTML
+- Provide ARIA labels where needed
+- Support screen readers
+
+## Error Handling
+
+### Data Validation
+- Always validate project structure on load
+- Handle missing or corrupted data gracefully
+- Provide clear error messages
+- Support data recovery when possible
+
+### User Errors
+- Validate inputs with helpful messages
+- Prevent data loss (confirm destructive actions)
+- Auto-save should never lose work
+
+## Documentation
+
+### Code Comments
+- Document complex algorithms and business logic
+- Explain framework mappings clearly
+- Note any deviations from standard Snowflake/STC methods
+
+### User-Facing Text
+- All guidance text should be neutral and helpful
+- Avoid jargon when possible
+- Provide examples that are simple and clear
+- Make it clear that suggestions are optional
+
+## Testing Strategy
+
+### Unit Tests
+- Test data migrations
+- Test framework mapping logic
+- Test tip filtering logic
+- Test storage operations
+
+### Integration Tests
+- Test complete workflows (Discovery → Structure → Revision)
+- Test data export/import
+- Test framework interactions
+
+### Manual Testing
+- Use fixture data for consistent testing
+- Test with various genre/archetype combinations
+- Verify all three modes work correctly
+
+## Git & Version Control
+
+### Commit Messages
+- Use clear, descriptive commit messages
+- Reference specific features or fixes
+- Group related changes together
+
+### Branching
+- Use feature branches for new functionality
+- Keep main branch stable
+- Test thoroughly before merging
+
+## Dependencies
+
+### Preferred Libraries
+- TypeScript for type safety
+- Modern UI framework (React/Next.js recommended)
+- Tailwind CSS for styling (if using CSS framework)
+- Local storage wrapper (Dexie for IndexedDB if needed)
+- Markdown editor for rich text (if needed)
+
+### Avoid
+- Heavy dependencies that bloat the bundle
+- Frameworks that require backend (this is offline-first)
+- Overly opinionated libraries that conflict with our structure
+
+## Code Review Checklist
+
+Before submitting code, ensure:
+- [ ] TypeScript types are properly defined
+- [ ] Framework abstractions are maintained
+- [ ] Data migrations are handled
+- [ ] UI follows the three-mode structure
+- [ ] Tips are contextual and helpful
+- [ ] No hardcoded content (use data files)
+- [ ] Storage operations are safe
+- [ ] Error handling is in place
+- [ ] Code is commented where needed
+- [ ] Follows naming conventions
+
