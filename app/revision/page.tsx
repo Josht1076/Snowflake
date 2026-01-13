@@ -1,24 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import { getProject } from '@/utils/storage';
 import { Project } from '@/types/project';
 import HealthCheck from '@/components/revision/HealthCheck';
 
-export default function RevisionPage() {
-  const searchParams = useSearchParams();
-  const projectId = searchParams.get('project');
+export const dynamic = 'force-dynamic';
+
+function RevisionContent() {
+  const [projectId, setProjectId] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (projectId) {
-      const loaded = getProject(projectId);
+    const id =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('project')
+        : null;
+    setProjectId(id);
+
+    if (id) {
+      const loaded = getProject(id);
       setProject(loaded);
     }
     setLoading(false);
-  }, [projectId]);
+  }, []);
 
   if (loading) {
     return (
@@ -51,3 +57,10 @@ export default function RevisionPage() {
   );
 }
 
+export default function RevisionPage() {
+  return (
+    <Suspense fallback={<main className="loading-container"><div className="loading-content max-w-4xl">Loading...</div></main>}>
+      <RevisionContent />
+    </Suspense>
+  );
+}

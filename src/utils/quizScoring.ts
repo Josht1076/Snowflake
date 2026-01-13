@@ -22,8 +22,7 @@ export function scoreModule(
 ): QuizResult {
   const scores: Record<string, number> = {};
 
-  // Handle Module 5 special case (per-question mapping)
-  if (module.scoring.type === 'style' && typeof module.scoring.mapping === 'object') {
+  if (module.scoring.type === 'style') {
     // Module 5 has per-question mapping
     const mapping = module.scoring.mapping as Record<string, Record<string, string[]>>;
 
@@ -31,7 +30,7 @@ export function scoreModule(
       const answerKey = answers[question.id];
       if (!answerKey) return;
 
-      const questionMapping = mapping[question.id.toString()];
+      const questionMapping = mapping[question.id.toString()] as Record<string, string[]> | undefined;
       if (!questionMapping) return;
 
       const tags = questionMapping[answerKey] || [];

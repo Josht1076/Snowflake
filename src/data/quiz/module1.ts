@@ -3,13 +3,20 @@
  * 20 questions to determine primary and secondary genres
  */
 
+export type QuizScoring =
+  | {
+      type: 'style';
+      mapping: Record<string, Record<string, string[]>>;
+    }
+  | {
+      type: string;
+      mapping: Record<string, string[]>;
+    };
+
 export interface QuizModule {
   module: string;
   description: string;
-  scoring: {
-    type: string;
-    mapping: Record<string, string[]>;
-  };
+  scoring: QuizScoring;
   questions: QuizQuestion[];
 }
 

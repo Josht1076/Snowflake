@@ -46,7 +46,7 @@ export const module5: QuizModule = {
         D: ['Vibe:Intimate'],
         E: ['Vibe:Political/Relational'],
       },
-    } as any,
+    },
   },
   questions: [
     {
