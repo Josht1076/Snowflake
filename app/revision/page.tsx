@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { getProject } from '@/utils/storage';
 import { Project } from '@/types/project';
 import HealthCheck from '@/components/revision/HealthCheck';
+import Navigation from '@/components/common/Navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,15 +50,18 @@ function RevisionContent() {
   }
 
   return (
-    <main className="page-container">
-      <div className="page-content max-w-4xl">
-        <h1 className="page-heading-light">Revision Mode</h1>
-        <p className="text-body mb-6">
-          A lightweight "story health check" for your project.
-        </p>
-        <HealthCheck project={project} />
-      </div>
-    </main>
+    <>
+      <Navigation />
+      <main className="page-container">
+        <div className="page-content max-w-4xl">
+          <h1 className="page-heading-light">Revision Mode</h1>
+          <p className="text-body mb-6">
+            A lightweight "story health check" for your project.
+          </p>
+          <HealthCheck project={project} />
+        </div>
+      </main>
+    </>
   );
 }
 

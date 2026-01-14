@@ -7,6 +7,7 @@ import GenreSelector from '@/components/discovery/GenreSelector';
 import QuizFlow from '@/components/discovery/QuizFlow';
 import { createNewProject, saveProject, setCurrentProjectId } from '@/utils/storage';
 import { Project } from '@/types/project';
+import Navigation from '@/components/common/Navigation';
 
 type DiscoveryStep = 'form' | 'genre' | 'quiz' | 'complete';
 
@@ -61,9 +62,11 @@ export default function DiscoveryPage() {
   };
 
   return (
-    <main className="page-container">
-      <div className="page-content max-w-3xl">
-        <h1 className="page-heading-light">New Project</h1>
+    <>
+      <Navigation />
+      <main className="page-container">
+        <div className="page-content max-w-3xl">
+          <h1 className="page-heading-light">New Project</h1>
 
         {step === 'form' && (
           <NewProjectForm
@@ -87,8 +90,9 @@ export default function DiscoveryPage() {
             onSkip={() => handleComplete()}
           />
         )}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }
 

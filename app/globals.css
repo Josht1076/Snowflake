@@ -152,15 +152,15 @@
   }
 
   .layout-sidebar {
-    @apply w-64 border-r border-gray-800 bg-gray-900;
+    @apply hidden md:block w-64 border-r border-gray-800 bg-gray-900;
   }
 
   .layout-content {
-    @apply flex-1 overflow-y-auto bg-black;
+    @apply flex-1 overflow-y-auto bg-black w-full;
   }
 
   .layout-panel {
-    @apply w-80 border-l border-gray-800 bg-gray-900 flex flex-col overflow-hidden;
+    @apply hidden md:flex w-80 border-l border-gray-800 bg-gray-900 flex-col overflow-hidden;
   }
 
   .scrollable-container {
