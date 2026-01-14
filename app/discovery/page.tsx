@@ -16,13 +16,13 @@ export default function DiscoveryPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [showQuiz, setShowQuiz] = useState(false);
 
-  const handleProjectCreated = (newProject: Project) => {
+  const handleProjectCreated = async (newProject: Project) => {
     setProject(newProject);
-    saveProject(newProject);
+    await saveProject(newProject);
     setStep('genre');
   };
 
-  const handleGenreSelected = (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
+  const handleGenreSelected = async (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
     if (!project) return;
 
     const updated = {
@@ -31,7 +31,7 @@ export default function DiscoveryPage() {
       secondaryGenreIds,
     };
     setProject(updated);
-    saveProject(updated);
+    await saveProject(updated);
 
     if (showQuiz) {
       setStep('quiz');
@@ -40,7 +40,7 @@ export default function DiscoveryPage() {
     }
   };
 
-  const handleQuizComplete = (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
+  const handleQuizComplete = async (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
     if (!project) return;
 
     const updated = {
@@ -49,7 +49,7 @@ export default function DiscoveryPage() {
       secondaryGenreIds,
     };
     setProject(updated);
-    saveProject(updated);
+    await saveProject(updated);
     handleComplete();
   };
 

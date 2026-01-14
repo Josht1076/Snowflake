@@ -27,7 +27,7 @@ export default function StepEditor({ project, stepId, onProjectUpdate }: StepEdi
     status: 'not_started' as const,
   };
 
-  const handleUpdate = (text: string, status: 'not_started' | 'in_progress' | 'complete') => {
+  const handleUpdate = async (text: string, status: 'not_started' | 'in_progress' | 'complete') => {
     const updated = {
       ...project,
       snowflakeContent: {
@@ -39,7 +39,7 @@ export default function StepEditor({ project, stepId, onProjectUpdate }: StepEdi
         },
       },
     };
-    saveProject(updated);
+    await saveProject(updated);
     onProjectUpdate(updated);
   };
 

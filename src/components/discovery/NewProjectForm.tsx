@@ -14,7 +14,7 @@ export default function NewProjectForm({ onComplete, onRequestQuiz }: NewProject
   const [logline, setLogline] = useState('');
   const [idea, setIdea] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
@@ -27,7 +27,7 @@ export default function NewProjectForm({ onComplete, onRequestQuiz }: NewProject
       status: logline || idea ? 'in_progress' : 'not_started',
     };
 
-    saveProject(project);
+    await saveProject(project);
     onComplete(project);
   };
 

@@ -13,17 +13,21 @@ function RevisionContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const id =
-      typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('project')
-        : null;
-    setProjectId(id);
+    const loadProject = async () => {
+      const id =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('project')
+          : null;
+      setProjectId(id);
 
-    if (id) {
-      const loaded = getProject(id);
-      setProject(loaded);
-    }
-    setLoading(false);
+      if (id) {
+        const loaded = await getProject(id);
+        setProject(loaded);
+      }
+      setLoading(false);
+    };
+
+    loadProject();
   }, []);
 
   if (loading) {
