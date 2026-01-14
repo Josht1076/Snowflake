@@ -27,10 +27,10 @@ export function UserMenu() {
 
   return (
     <div className="flex items-center gap-4">
-      <span className="text-sm text-gray-600">{user.email}</span>
+      <span className="text-sm text-gray-300">{user.email}</span>
       <button
         onClick={handleSignOut}
-        className="text-sm text-gray-600 hover:text-gray-900 underline"
+        className="text-sm text-gray-300 hover:text-white underline transition-colors"
       >
         Sign Out
       </button>

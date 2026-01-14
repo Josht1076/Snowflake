@@ -17,8 +17,30 @@ interface LayoutProps {
 export default function Layout({ project, onProjectUpdate }: LayoutProps) {
   const [selectedStep, setSelectedStep] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<'snowflake' | 'scenes'>('snowflake');
+  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
   const [mobileLeftOpen, setMobileLeftOpen] = useState(false);
   const [mobileRightOpen, setMobileRightOpen] = useState(false);
+
+  const handleNavigate = (type: 'snowflake' | 'stc' | 'scene', id: string) => {
+    if (type === 'snowflake') {
+      setSelectedTab('snowflake');
+      setSelectedStep(id);
+      setSelectedSceneId(null);
+      setMobileLeftOpen(false);
+    } else if (type === 'scene') {
+      setSelectedTab('scenes');
+      setSelectedSceneId(id);
+      setSelectedStep(null);
+      setMobileLeftOpen(false);
+    } else if (type === 'stc') {
+      // STC beats are not directly editable yet, but we can show a message
+      // or switch to scenes tab if needed
+      setSelectedTab('snowflake');
+      setSelectedStep(null);
+      setSelectedSceneId(null);
+      setMobileLeftOpen(false);
+    }
+  };
 
   return (
     <div className="layout-container">
@@ -95,6 +117,8 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
             selectedStep={selectedStep}
             selectedTab={selectedTab}
             onProjectUpdate={onProjectUpdate}
+            onNavigate={handleNavigate}
+            selectedSceneId={selectedSceneId}
           />
         </div>
 

@@ -1,18 +1,27 @@
 'use client';
 
 import { Project, SceneCard } from '@/types/project';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SceneCardComponent from './SceneCard';
 import SceneEditor from './SceneEditor';
 
 interface SceneListProps {
   project: Project;
   onProjectUpdate: (project: Project) => void;
+  initialSelectedSceneId?: string | null;
 }
 
-export default function SceneList({ project, onProjectUpdate }: SceneListProps) {
-  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
+export default function SceneList({ project, onProjectUpdate, initialSelectedSceneId }: SceneListProps) {
+  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(initialSelectedSceneId || null);
   const [showEditor, setShowEditor] = useState(false);
+
+  // Update selected scene when initialSelectedSceneId changes
+  useEffect(() => {
+    if (initialSelectedSceneId) {
+      setSelectedSceneId(initialSelectedSceneId);
+      setShowEditor(true);
+    }
+  }, [initialSelectedSceneId]);
 
   const selectedScene = selectedSceneId
     ? project.scenes.find((s) => s.id === selectedSceneId)
