@@ -71,11 +71,15 @@ sudo docker info >/dev/null 2>&1 || { echo "[install] Docker failed to start"; s
 # otherwise the Supabase services cannot reach the database container.
 sudo sysctl -w net.bridge.bridge-nf-call-iptables=0 >/dev/null 2>&1 || true
 sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=0 >/dev/null 2>&1 || true
+# Convenience for interactive `docker` use; the scripts themselves use sudo so
+# they never depend on the socket's file permissions.
 sudo chmod 666 /var/run/docker.sock || true
 
+# The Supabase CLI is run via sudo so it can always reach the Docker socket
+# regardless of the socket's ownership/permissions in this environment.
 # Clear any stale stack from a previous run before validating a clean start.
-supabase stop --no-backup >/dev/null 2>&1 || true
-supabase start
-supabase stop --no-backup || true
+sudo supabase stop --no-backup >/dev/null 2>&1 || true
+sudo supabase start
+sudo supabase stop --no-backup || true
 
 echo "[install] Done."

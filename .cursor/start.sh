@@ -29,20 +29,22 @@ sudo docker info >/dev/null 2>&1 || { echo "[start] Docker failed to start"; sud
 sudo sysctl -w net.bridge.bridge-nf-call-iptables=0 >/dev/null 2>&1 || true
 sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=0 >/dev/null 2>&1 || true
 
-# Allow the agent user to talk to Docker (and thus the Supabase CLI) without sudo.
+# Convenience for interactive `docker` use; the Supabase CLI below runs via sudo
+# so it never depends on the socket's file permissions.
 sudo chmod 666 /var/run/docker.sock || true
 
+# The Supabase CLI is invoked with sudo so it can always reach the Docker socket.
 echo "[start] Ensuring the Supabase local stack is running..."
-if supabase status >/dev/null 2>&1; then
+if sudo supabase status >/dev/null 2>&1; then
   echo "[start] Supabase already running."
 else
   # Clear any stale/half-started containers from a previous boot, then start.
-  supabase stop --no-backup >/dev/null 2>&1 || true
-  supabase start
+  sudo supabase stop --no-backup >/dev/null 2>&1 || true
+  sudo supabase start
 fi
 
 echo "[start] Writing .env.local from the local Supabase credentials..."
-status_env="$(supabase status -o env)"
+status_env="$(sudo supabase status -o env)"
 api_url="$(printf '%s\n' "$status_env" | grep '^API_URL=' | cut -d'"' -f2)"
 pub_key="$(printf '%s\n' "$status_env" | grep '^PUBLISHABLE_KEY=' | cut -d'"' -f2)"
 cat > .env.local <<EOF
