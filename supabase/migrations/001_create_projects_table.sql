@@ -31,6 +31,12 @@ CREATE INDEX IF NOT EXISTS projects_updated_at_idx ON projects(updated_at DESC);
 -- Enable Row Level Security
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
+-- Grant table privileges to the authenticated role.
+-- RLS policies restrict which rows are visible; these grants allow the Data API
+-- `authenticated` role to reach the table at all. Without them, every request
+-- fails with "permission denied for table projects".
+GRANT SELECT, INSERT, UPDATE, DELETE ON projects TO authenticated;
+
 -- RLS policies (restrict to authenticated users; use SELECT auth.uid() for planner friendliness)
 CREATE POLICY users_can_view_own_projects
   ON projects FOR SELECT
