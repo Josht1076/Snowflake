@@ -1,14 +1,18 @@
 'use client';
 
 import { Project } from '@/types/project';
+import { stcBeats } from '@/data/frameworks/stc';
 import StepEditor from './snowflake/StepEditor';
 import SceneList from './scenes/SceneList';
+import StcBeatEditor from './stc/StcBeatEditor';
 import SmartNextButton from './SmartNextButton';
+import { SidebarTab } from './Sidebar';
 
 interface MainPanelProps {
   project: Project;
   selectedStep: string | null;
-  selectedTab: 'snowflake' | 'scenes';
+  selectedTab: SidebarTab;
+  selectedBeatId: string | null;
   onProjectUpdate: (project: Project) => void;
   onNavigate: (type: 'snowflake' | 'stc' | 'scene', id: string) => void;
   selectedSceneId?: string | null;
@@ -18,6 +22,7 @@ export default function MainPanel({
   project,
   selectedStep,
   selectedTab,
+  selectedBeatId,
   onProjectUpdate,
   onNavigate,
   selectedSceneId,
@@ -25,11 +30,39 @@ export default function MainPanel({
   if (selectedTab === 'scenes') {
     return (
       <div className="full-height">
-        <SceneList 
-          project={project} 
+        <SceneList
+          project={project}
           onProjectUpdate={onProjectUpdate}
           initialSelectedSceneId={selectedSceneId}
         />
+      </div>
+    );
+  }
+
+  if (selectedTab === 'stc') {
+    if (!selectedBeatId) {
+      return (
+        <div className="content-padding">
+          <h2 className="text-heading-1 mb-4">Select a Beat</h2>
+          <p className="text-body mb-6">Choose a Save the Cat beat from the sidebar to add notes.</p>
+          <SmartNextButton project={project} onNavigate={onNavigate} />
+        </div>
+      );
+    }
+
+    const beat = stcBeats.find((item) => item.id === selectedBeatId);
+    if (!beat) return null;
+
+    return (
+      <div className="content-padding">
+        <StcBeatEditor
+          project={project}
+          beat={beat}
+          onProjectUpdate={onProjectUpdate}
+        />
+        <div className="mt-6">
+          <SmartNextButton project={project} onNavigate={onNavigate} />
+        </div>
       </div>
     );
   }
@@ -57,4 +90,3 @@ export default function MainPanel({
     </div>
   );
 }
-

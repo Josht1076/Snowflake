@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { SceneCard } from '@/types/project';
+import { snowflakeSteps } from '@/data/frameworks/snowflake';
+import { stcBeats } from '@/data/frameworks/stc';
 
 interface SceneEditorProps {
   scene: SceneCard;
@@ -26,15 +28,26 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBa
     setRelatedStcBeatId(scene.relatedStcBeatId || '');
   }, [scene]);
 
-  const handleSave = () => {
-    const updated: SceneCard = {
+  const saveScene = (
+    overrides: Partial<{
+      title: string;
+      briefPurpose: string;
+      relatedSnowflakeStepId: string;
+      relatedStcBeatId: string;
+    }> = {}
+  ) => {
+    const nextTitle = overrides.title ?? title;
+    const nextPurpose = overrides.briefPurpose ?? briefPurpose;
+    const nextStepId = overrides.relatedSnowflakeStepId ?? relatedSnowflakeStepId;
+    const nextBeatId = overrides.relatedStcBeatId ?? relatedStcBeatId;
+
+    onUpdate({
       ...scene,
-      title,
-      briefPurpose,
-      relatedSnowflakeStepId: relatedSnowflakeStepId || undefined,
-      relatedStcBeatId: relatedStcBeatId || undefined,
-    };
-    onUpdate(updated);
+      title: nextTitle,
+      briefPurpose: nextPurpose,
+      relatedSnowflakeStepId: nextStepId || undefined,
+      relatedStcBeatId: nextBeatId || undefined,
+    });
   };
 
   const handleDelete = () => {
@@ -74,7 +87,10 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBa
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            saveScene({ title: e.target.value });
+          }}
           className="form-input"
         />
       </div>
@@ -83,7 +99,10 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBa
         <label className="form-label">Brief Purpose</label>
         <textarea
           value={briefPurpose}
-          onChange={(e) => setBriefPurpose(e.target.value)}
+          onChange={(e) => {
+            setBriefPurpose(e.target.value);
+            saveScene({ briefPurpose: e.target.value });
+          }}
           className="form-textarea"
           rows={4}
           placeholder="Why does this scene exist?"
@@ -91,34 +110,50 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBa
       </div>
 
       <div>
-        <label className="form-label">Related Snowflake Step (Optional)</label>
-        <input
-          type="text"
+        <label htmlFor="related-snowflake-step" className="form-label">
+          Related Snowflake Step (Optional)
+        </label>
+        <select
+          id="related-snowflake-step"
           value={relatedSnowflakeStepId}
-          onChange={(e) => setRelatedSnowflakeStepId(e.target.value)}
-          className="form-input"
-          placeholder="e.g. sf_step_7"
-        />
+          onChange={(e) => {
+            setRelatedSnowflakeStepId(e.target.value);
+            saveScene({ relatedSnowflakeStepId: e.target.value });
+          }}
+          className="form-select"
+        >
+          <option value="">None</option>
+          {snowflakeSteps.map((step) => (
+            <option key={step.id} value={step.id}>
+              {step.title}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
-        <label className="form-label">Related STC Beat (Optional)</label>
-        <input
-          type="text"
+        <label htmlFor="related-stc-beat" className="form-label">
+          Related STC Beat (Optional)
+        </label>
+        <select
+          id="related-stc-beat"
           value={relatedStcBeatId}
-          onChange={(e) => setRelatedStcBeatId(e.target.value)}
-          className="form-input"
-          placeholder="e.g. stc_midpoint"
-        />
+          onChange={(e) => {
+            setRelatedStcBeatId(e.target.value);
+            saveScene({ relatedStcBeatId: e.target.value });
+          }}
+          className="form-select"
+        >
+          <option value="">None</option>
+          {stcBeats.map((beat) => (
+            <option key={beat.id} value={beat.id}>
+              {beat.title}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <button
-          onClick={handleSave}
-          className="btn-primary-action"
-        >
-          Save Scene
-        </button>
         <button
           onClick={handleDelete}
           className="btn-danger"
@@ -129,4 +164,3 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBa
     </div>
   );
 }
-

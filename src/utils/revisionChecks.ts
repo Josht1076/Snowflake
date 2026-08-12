@@ -10,6 +10,8 @@ export interface RevisionCheck {
   status: 'pass' | 'warning' | 'fail';
   message: string;
   details?: string;
+  targetType?: 'snowflake' | 'stc' | 'scene';
+  targetId?: string;
 }
 
 /**
@@ -18,7 +20,6 @@ export interface RevisionCheck {
 export function runRevisionChecks(project: Project): RevisionCheck[] {
   const checks: RevisionCheck[] = [];
 
-  // Check Snowflake Steps 1-3 completion
   const steps1to3 = snowflakeSteps.slice(0, 3);
   steps1to3.forEach((step) => {
     const content = project.snowflakeContent[step.id];
@@ -27,11 +28,12 @@ export function runRevisionChecks(project: Project): RevisionCheck[] {
         status: 'warning',
         message: `${step.title} is not complete`,
         details: 'Steps 1-3 should be filled in before moving forward.',
+        targetType: 'snowflake',
+        targetId: step.id,
       });
     }
   });
 
-  // Check key STC beats have content
   const keyBeats = ['stc_opening_image', 'stc_catalyst', 'stc_midpoint', 'stc_all_is_lost', 'stc_finale'];
   keyBeats.forEach((beatId) => {
     const content = project.stcContent[beatId];
@@ -41,11 +43,12 @@ export function runRevisionChecks(project: Project): RevisionCheck[] {
         status: 'warning',
         message: `Key beat "${beat?.title || beatId}" has no content`,
         details: 'Consider adding content for this important story beat.',
+        targetType: 'stc',
+        targetId: beatId,
       });
     }
   });
 
-  // Check scene linkage
   if (project.scenes.length > 0) {
     const unlinkedScenes = project.scenes.filter(
       (s) => !s.relatedSnowflakeStepId && !s.relatedStcBeatId
@@ -55,11 +58,12 @@ export function runRevisionChecks(project: Project): RevisionCheck[] {
         status: 'warning',
         message: `${unlinkedScenes.length} scene(s) are not linked to steps or beats`,
         details: 'Consider linking scenes to Snowflake steps or STC beats for better organization.',
+        targetType: 'scene',
+        targetId: unlinkedScenes[0].id,
       });
     }
   }
 
-  // Simple keyword consistency check (Step 1 logline vs Finale)
   const step1Content = project.snowflakeContent['sf_step_1'];
   const finaleContent = project.stcContent['stc_finale'];
   if (step1Content?.text && finaleContent?.text) {
@@ -75,11 +79,12 @@ export function runRevisionChecks(project: Project): RevisionCheck[] {
         status: 'warning',
         message: 'Step 1 logline and Finale beat share no major common words',
         details: 'This might indicate a disconnect between your opening concept and ending.',
+        targetType: 'snowflake',
+        targetId: 'sf_step_1',
       });
     }
   }
 
-  // If all checks pass, add a success message
   if (checks.length === 0) {
     checks.push({
       status: 'pass',
@@ -90,4 +95,3 @@ export function runRevisionChecks(project: Project): RevisionCheck[] {
 
   return checks;
 }
-

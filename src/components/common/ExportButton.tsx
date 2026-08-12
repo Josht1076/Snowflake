@@ -5,20 +5,21 @@ import { downloadProject } from '@/utils/export';
 
 interface ExportButtonProps {
   project: Project;
+  compact?: boolean;
 }
 
-export default function ExportButton({ project }: ExportButtonProps) {
+export default function ExportButton({ project, compact = false }: ExportButtonProps) {
   const handleExport = () => {
     downloadProject(project);
   };
 
   return (
     <button
+      type="button"
       onClick={handleExport}
-      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+      className={compact ? 'btn-secondary-action text-sm' : 'btn-secondary-action'}
     >
-      Export Project
+      Export
     </button>
   );
 }
-
