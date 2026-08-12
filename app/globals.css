@@ -386,20 +386,20 @@
     @apply w-full md:w-1/3 border-b md:border-b-0 md:border-r sidebar-padding scrollable-container;
   }
 
-  .scene-list-content {
-    @apply flex-1 sidebar-padding min-h-0;
-  }
-
   .scene-list-container.editor-open .scene-list-sidebar {
     @apply hidden md:block;
   }
 
+  .scene-list-content {
+    @apply flex-1 sidebar-padding min-h-0 hidden md:block;
+  }
+
   .scene-list-container.editor-open .scene-list-content {
-    @apply flex-1;
+    @apply block flex-1;
   }
 
   .scene-list-empty {
-    @apply text-center text-body mt-8;
+    @apply text-body-sm text-gray-400 p-3 rounded-lg border border-gray-700/80 bg-gray-900/60;
   }
 
   /* Close button - using WindPalette colors */
