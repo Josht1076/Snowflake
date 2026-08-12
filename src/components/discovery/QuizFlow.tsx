@@ -5,22 +5,37 @@ import { Project } from '@/types/project';
 import { module1 } from '@/data/quiz/module1';
 import QuizModule from './QuizModule';
 import QuizResults from './QuizResults';
-import { scoreModule1Genres } from '@/utils/quizScoring';
+import { scoreModule1Genres, scoreModule1Archetypes } from '@/utils/quizScoring';
 
 interface QuizFlowProps {
   project: Project;
-  onComplete: (primaryGenreId: string | null, secondaryGenreIds: string[]) => void;
+  onComplete: (
+    primaryGenreId: string | null,
+    secondaryGenreIds: string[],
+    primaryStcId: string | null,
+    secondaryStcId: string | null
+  ) => void;
   onSkip: () => void;
-}
-
-export default function QuizFlow({ project, onComplete, onSkip }: QuizFlowProps) {
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [showResults, setShowResults] = useState(false);
-  const [module1Result, setModule1Result] = useState<{
+  onEditManually?: (result: {
     primaryGenreId: string | null;
     secondaryGenreId: string | null;
     tertiaryGenreId: string | null;
-    scores: Record<string, number>;
+    primaryStcId: string | null;
+    secondaryStcId: string | null;
+  }) => void;
+}
+
+export default function QuizFlow({ project, onComplete, onSkip, onEditManually }: QuizFlowProps) {
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+  const [quizResult, setQuizResult] = useState<{
+    primaryGenreId: string | null;
+    secondaryGenreId: string | null;
+    tertiaryGenreId: string | null;
+    genreScores: Record<string, number>;
+    primaryStcId: string | null;
+    secondaryStcId: string | null;
+    archetypeScores: Record<string, number>;
   } | null>(null);
 
   const handleAnswer = (questionId: number, answer: string) => {
@@ -28,18 +43,40 @@ export default function QuizFlow({ project, onComplete, onSkip }: QuizFlowProps)
   };
 
   const handleModule1Complete = () => {
-    const result = scoreModule1Genres(module1, answers);
-    setModule1Result(result);
+    const genreResult = scoreModule1Genres(module1, answers);
+    const archetypeResult = scoreModule1Archetypes(module1, answers);
+    setQuizResult({
+      primaryGenreId: genreResult.primaryGenreId,
+      secondaryGenreId: genreResult.secondaryGenreId,
+      tertiaryGenreId: genreResult.tertiaryGenreId,
+      genreScores: genreResult.scores,
+      primaryStcId: archetypeResult.primaryStcId,
+      secondaryStcId: archetypeResult.secondaryStcId,
+      archetypeScores: archetypeResult.scores,
+    });
     setShowResults(true);
   };
 
-  const handleConfirmResults = (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
-    onComplete(primaryGenreId, secondaryGenreIds);
+  const handleConfirmResults = (
+    primaryGenreId: string | null,
+    secondaryGenreIds: string[],
+    primaryStcId: string | null,
+    secondaryStcId: string | null
+  ) => {
+    onComplete(primaryGenreId, secondaryGenreIds, primaryStcId, secondaryStcId);
   };
 
   const handleEditManually = () => {
     setShowResults(false);
-    // Could navigate to genre selector here
+    if (quizResult) {
+      onEditManually?.({
+        primaryGenreId: quizResult.primaryGenreId,
+        secondaryGenreId: quizResult.secondaryGenreId,
+        tertiaryGenreId: quizResult.tertiaryGenreId,
+        primaryStcId: quizResult.primaryStcId,
+        secondaryStcId: quizResult.secondaryStcId,
+      });
+    }
   };
 
   const allAnswered = module1.questions.every((q) => answers[q.id]);
@@ -48,11 +85,7 @@ export default function QuizFlow({ project, onComplete, onSkip }: QuizFlowProps)
     <div className="section-spacing">
       {!showResults ? (
         <>
-          <QuizModule
-            module={module1}
-            answers={answers}
-            onAnswer={handleAnswer}
-          />
+          <QuizModule module={module1} answers={answers} onAnswer={handleAnswer} />
           <div className="flex gap-4">
             <button
               onClick={handleModule1Complete}
@@ -61,17 +94,14 @@ export default function QuizFlow({ project, onComplete, onSkip }: QuizFlowProps)
             >
               Complete Quiz
             </button>
-            <button
-              onClick={onSkip}
-              className="btn-secondary-action"
-            >
+            <button onClick={onSkip} className="btn-secondary-action">
               Skip Quiz
             </button>
           </div>
         </>
-      ) : module1Result ? (
+      ) : quizResult ? (
         <QuizResults
-          module1Result={module1Result}
+          result={quizResult}
           onConfirm={handleConfirmResults}
           onEdit={handleEditManually}
         />
@@ -79,4 +109,3 @@ export default function QuizFlow({ project, onComplete, onSkip }: QuizFlowProps)
     </div>
   );
 }
-

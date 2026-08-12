@@ -7,6 +7,7 @@ import MainPanel from './MainPanel';
 import TipsPanel from './TipsPanel';
 import MobileDrawer from './MobileDrawer';
 import Navigation from '@/components/common/Navigation';
+import ProjectSettingsModal from './ProjectSettingsModal';
 
 interface LayoutProps {
   project: Project;
@@ -21,6 +22,7 @@ export default function Layout({ project, onProjectUpdate, isSaving = false }: L
   const [selectedBeatId, setSelectedBeatId] = useState<string | null>(null);
   const [mobileLeftOpen, setMobileLeftOpen] = useState(false);
   const [mobileRightOpen, setMobileRightOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -97,7 +99,11 @@ export default function Layout({ project, onProjectUpdate, isSaving = false }: L
 
   return (
     <div className="layout-container">
-      <Navigation projectId={project.id} isSaving={isSaving} />
+      <Navigation
+        projectId={project.id}
+        isSaving={isSaving}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
 
       <div className="md:hidden flex items-center justify-between p-2 border-b border-gray-800 bg-gray-900">
         <button
@@ -169,6 +175,13 @@ export default function Layout({ project, onProjectUpdate, isSaving = false }: L
           />
         </MobileDrawer>
       </div>
+
+      <ProjectSettingsModal
+        project={project}
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        onSave={onProjectUpdate}
+      />
     </div>
   );
 }

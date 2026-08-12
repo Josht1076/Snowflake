@@ -68,6 +68,68 @@ export function scoreModule(
 }
 
 /**
+ * Map Module 1 answer letters to STC archetype IDs (parallel to genre mapping)
+ */
+const MODULE1_ARCHETYPE_NAMES: Record<string, string[]> = {
+  A: ['Monster in the House', 'Dude with a Problem'],
+  B: ['Golden Fleece', 'Whydunit'],
+  C: ['Out of the Bottle', 'Superhero'],
+  D: ['Rites of Passage', 'Fool Triumphant'],
+  E: ['Buddy Love', 'Institutionalized'],
+};
+
+const archetypeNameToId: Record<string, string> = {
+  'Monster in the House': 'stc-monster-in-the-house',
+  'Golden Fleece': 'stc-golden-fleece',
+  'Out of the Bottle': 'stc-out-of-the-bottle',
+  'Dude with a Problem': 'stc-dude-with-a-problem',
+  'Rites of Passage': 'stc-rites-of-passage',
+  'Buddy Love': 'stc-buddy-love',
+  Whydunit: 'stc-whydunit',
+  'Fool Triumphant': 'stc-fool-triumphant',
+  Institutionalized: 'stc-institutionalized',
+  Superhero: 'stc-superhero',
+};
+
+export function mapArchetypeNameToId(archetypeName: string): string | null {
+  return archetypeNameToId[archetypeName] || null;
+}
+
+/**
+ * Score Module 1 and return top STC archetypes with IDs
+ */
+export function scoreModule1Archetypes(
+  module: QuizModule,
+  answers: Record<number, string>
+): {
+  primaryStcId: string | null;
+  secondaryStcId: string | null;
+  scores: Record<string, number>;
+} {
+  const archetypeScores: Record<string, number> = {};
+
+  module.questions.forEach((question) => {
+    const answerKey = answers[question.id];
+    if (!answerKey) return;
+
+    const archetypeNames = MODULE1_ARCHETYPE_NAMES[answerKey] || [];
+    archetypeNames.forEach((name) => {
+      archetypeScores[name] = (archetypeScores[name] || 0) + 1;
+    });
+  });
+
+  const sorted = Object.entries(archetypeScores)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name]) => name);
+
+  return {
+    primaryStcId: mapArchetypeNameToId(sorted[0] || ''),
+    secondaryStcId: mapArchetypeNameToId(sorted[1] || ''),
+    scores: archetypeScores,
+  };
+}
+
+/**
  * Map genre names to genre IDs
  */
 export function mapGenreNameToId(genreName: string): string | null {
