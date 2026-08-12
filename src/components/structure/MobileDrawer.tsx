@@ -57,15 +57,17 @@ export default function MobileDrawer({ isOpen, onClose, side, children }: Mobile
     };
   }, [isOpen, handleKeyDown]);
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <>
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-      )}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
       <div
         ref={drawerRef}
@@ -74,10 +76,8 @@ export default function MobileDrawer({ isOpen, onClose, side, children }: Mobile
         aria-labelledby={titleId}
         className={`
           fixed inset-y-0 z-50 bg-gray-900 border-r border-gray-800
-          transform transition-transform duration-300 ease-in-out
           md:hidden flex flex-col
           ${side === 'left' ? 'left-0 w-64' : 'right-0 w-80 border-l border-r-0'}
-          ${isOpen ? 'translate-x-0' : side === 'left' ? '-translate-x-full' : 'translate-x-full'}
         `}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-800 flex-shrink-0">
@@ -95,6 +95,7 @@ export default function MobileDrawer({ isOpen, onClose, side, children }: Mobile
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

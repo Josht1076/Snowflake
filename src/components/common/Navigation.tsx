@@ -25,7 +25,7 @@ export default function Navigation({
   const isRevision = pathname === '/revision';
 
   return (
-    <nav className="border-b border-gray-800 bg-gray-900">
+    <nav className="border-b border-gray-800 bg-gray-900" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 gap-4">
           {showBackToProjects && (

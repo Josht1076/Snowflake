@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
+import SkipLink from '@/components/common/SkipLink';
 
 export const metadata: Metadata = {
   title: 'Snowflake Novel Planner',
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <SkipLink />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

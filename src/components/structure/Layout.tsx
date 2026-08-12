@@ -135,7 +135,7 @@ export default function Layout({ project, onProjectUpdate, isSaving = false }: L
           <Sidebar {...sidebarProps} />
         </MobileDrawer>
 
-        <div className="layout-content">
+        <div id="main-content" className="layout-content" tabIndex={-1}>
           <MainPanel
             project={project}
             selectedStep={selectedStep}

@@ -8,6 +8,17 @@ interface HealthCheckProps {
   project: Project;
 }
 
+function getStatusLabel(status: 'pass' | 'warning' | 'fail') {
+  switch (status) {
+    case 'pass':
+      return 'Pass';
+    case 'warning':
+      return 'Warning';
+    case 'fail':
+      return 'Fail';
+  }
+}
+
 export default function HealthCheck({ project }: HealthCheckProps) {
   const checks = runRevisionChecks(project);
 
@@ -15,7 +26,7 @@ export default function HealthCheck({ project }: HealthCheckProps) {
     <div className="health-check-container">
       <div className="health-check-card">
         <h2 className="text-heading-2 mb-4 text-white">Health Check Results</h2>
-        <div className="space-y-3">
+        <ul className="space-y-3" aria-label="Health check results">
           {checks.map((check, index) => {
             const canNavigate = check.targetType && check.targetId;
             const href =
@@ -27,6 +38,14 @@ export default function HealthCheck({ project }: HealthCheckProps) {
                 ? `/structure?project=${project.id}&tab=scenes&scene=${check.targetId}`
                 : null;
 
+            const statusLabel = getStatusLabel(check.status);
+            const itemClassName =
+              check.status === 'pass'
+                ? 'health-check-pass'
+                : check.status === 'warning'
+                ? 'health-check-warning'
+                : 'health-check-fail';
+
             const content = (
               <>
                 <span className="text-xl" aria-hidden="true">
@@ -34,6 +53,7 @@ export default function HealthCheck({ project }: HealthCheckProps) {
                 </span>
                 <div className="flex-1">
                   <p className="health-check-message">
+                    <span className="sr-only">{statusLabel}: </span>
                     {check.message}
                     {canNavigate && (
                       <span className="sr-only"> — click to fix</span>
@@ -48,38 +68,24 @@ export default function HealthCheck({ project }: HealthCheckProps) {
 
             if (href) {
               return (
-                <Link
-                  key={index}
-                  href={href}
-                  className={`health-check-item block ${
-                    check.status === 'pass'
-                      ? 'health-check-pass'
-                      : check.status === 'warning'
-                      ? 'health-check-warning'
-                      : 'health-check-fail'
-                  } hover:opacity-90 transition-opacity`}
-                >
-                  {content}
-                </Link>
+                <li key={index}>
+                  <Link
+                    href={href}
+                    className={`health-check-item block ${itemClassName} hover:opacity-90 transition-opacity`}
+                  >
+                    {content}
+                  </Link>
+                </li>
               );
             }
 
             return (
-              <div
-                key={index}
-                className={
-                  check.status === 'pass'
-                    ? 'health-check-pass'
-                    : check.status === 'warning'
-                    ? 'health-check-warning'
-                    : 'health-check-fail'
-                }
-              >
+              <li key={index} className={itemClassName}>
                 {content}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </div>
   );

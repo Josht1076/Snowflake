@@ -46,7 +46,7 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <main className="page-container">
+      <main id="main-content" className="page-container" tabIndex={-1}>
         <div className="page-content">
           <div className="flex items-center justify-center min-h-[50dvh]">
             <p>Loading...</p>
@@ -61,7 +61,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="page-container">
+    <main id="main-content" className="page-container" tabIndex={-1}>
       <div className="page-content">
         <div className="flex flex-col items-center justify-center min-h-[50dvh]">
           <div className="max-w-md w-full space-y-8">

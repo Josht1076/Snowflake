@@ -52,7 +52,7 @@ function RevisionContent() {
   return (
     <>
       <Navigation />
-      <main className="page-container">
+      <main id="main-content" className="page-container" tabIndex={-1}>
         <div className="page-content max-w-4xl">
           <h1 className="page-heading-light">Revision Mode</h1>
           <p className="text-body mb-6">
