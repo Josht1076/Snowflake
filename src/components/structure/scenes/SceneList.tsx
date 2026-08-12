@@ -62,8 +62,10 @@ export default function SceneList({ project, onProjectUpdate, initialSelectedSce
     }
   };
 
+  const isEditorOpen = showEditor && selectedScene;
+
   return (
-    <div className="scene-list-container">
+    <div className={`scene-list-container${isEditorOpen ? ' editor-open' : ''}`}>
       <div className="scene-list-sidebar">
         <div className="mb-4">
           <button
@@ -88,7 +90,7 @@ export default function SceneList({ project, onProjectUpdate, initialSelectedSce
         </div>
       </div>
       <div className="scene-list-content">
-        {showEditor && selectedScene ? (
+        {isEditorOpen ? (
           <SceneEditor
             scene={selectedScene}
             onUpdate={handleUpdateScene}
@@ -97,6 +99,7 @@ export default function SceneList({ project, onProjectUpdate, initialSelectedSce
               setShowEditor(false);
               setSelectedSceneId(null);
             }}
+            showBackOnMobile
           />
         ) : (
           <div className="scene-list-empty">

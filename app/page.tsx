@@ -42,7 +42,7 @@ export default function Home() {
     return (
       <main className="page-container">
         <div className="page-content">
-          <div className="flex items-center justify-center min-h-screen">
+          <div className="flex items-center justify-center min-h-[50dvh]">
             <p>Loading...</p>
           </div>
         </div>
@@ -53,11 +53,13 @@ export default function Home() {
   return (
     <main className="page-container">
       <div className="page-content">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="page-heading">Snowflake Novel Planner</h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+          <h1 className="page-heading !mb-0">Snowflake Novel Planner</h1>
           {user && (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{user.email}</span>
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+              <span className="text-sm text-gray-400 truncate max-w-[200px] sm:max-w-xs">
+                {user.email}
+              </span>
               <button
                 onClick={async () => {
                   try {
@@ -67,7 +69,7 @@ export default function Home() {
                     console.error('Error signing out:', error);
                   }
                 }}
-                className="text-sm text-gray-600 hover:text-gray-900 underline"
+                className="text-sm text-gray-400 hover:text-white active:text-white underline min-h-[44px] flex items-center"
               >
                 Sign Out
               </button>

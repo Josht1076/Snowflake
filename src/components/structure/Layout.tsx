@@ -50,7 +50,7 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
       <div className="md:hidden flex items-center justify-between p-2 border-b border-gray-800 bg-gray-900">
         <button
           onClick={() => setMobileLeftOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-gray-800 text-white rounded-lg hover:bg-gray-700 active:bg-gray-600 transition-colors"
           aria-label="Open steps menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
         </button>
         <button
           onClick={() => setMobileRightOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-gray-800 text-white rounded-lg hover:bg-gray-700 active:bg-gray-600 transition-colors"
           aria-label="Open tips menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -8,9 +8,10 @@ interface SceneEditorProps {
   onUpdate: (scene: SceneCard) => void;
   onDelete: (sceneId: string) => void;
   onClose: () => void;
+  showBackOnMobile?: boolean;
 }
 
-export default function SceneEditor({ scene, onUpdate, onDelete, onClose }: SceneEditorProps) {
+export default function SceneEditor({ scene, onUpdate, onDelete, onClose, showBackOnMobile }: SceneEditorProps) {
   const [title, setTitle] = useState(scene.title);
   const [briefPurpose, setBriefPurpose] = useState(scene.briefPurpose);
   const [relatedSnowflakeStepId, setRelatedSnowflakeStepId] = useState(
@@ -44,11 +45,25 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose }: Scen
 
   return (
     <div className="section-spacing">
-      <div className="flex justify-between items-center">
-        <h2 className="text-heading-1">Edit Scene</h2>
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          {showBackOnMobile && (
+            <button
+              onClick={onClose}
+              className="md:hidden flex items-center gap-1 text-gray-400 hover:text-white active:text-white transition-colors min-h-[44px] min-w-[44px] -ml-2"
+              aria-label="Back to scene list"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+          <h2 className="text-heading-1 truncate">Edit Scene</h2>
+        </div>
         <button
           onClick={onClose}
-          className="btn-close"
+          className="btn-close min-h-[44px] min-w-[44px] flex items-center justify-center"
+          aria-label="Close editor"
         >
           ✕
         </button>
@@ -97,7 +112,7 @@ export default function SceneEditor({ scene, onUpdate, onDelete, onClose }: Scen
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={handleSave}
           className="btn-primary-action"
