@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Project } from '@/types/project';
-import TimelineRibbon from './TimelineRibbon';
 import Sidebar from './Sidebar';
 import MainPanel from './MainPanel';
 import TipsPanel from './TipsPanel';
@@ -47,11 +46,6 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
       {/* Navigation */}
       <Navigation />
       
-      {/* Top: Timeline Ribbon */}
-      <div className="border-b border-gray-800 bg-black">
-        <TimelineRibbon project={project} />
-      </div>
-
       {/* Mobile Toggle Buttons */}
       <div className="md:hidden flex items-center justify-between p-2 border-b border-gray-800 bg-gray-900">
         <button
