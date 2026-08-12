@@ -139,7 +139,7 @@
   }
 
   .btn-secondary-action {
-    @apply px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105 hover:shadow-xl;
+    @apply inline-flex items-center justify-center px-6 py-2 min-h-[44px] bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105 hover:shadow-xl;
   }
 
   /* Centralized layout components */
@@ -271,11 +271,11 @@
   }
 
   .btn-primary-action {
-    @apply px-6 py-2 min-h-[44px] bg-primary-500 text-white rounded-lg hover:bg-primary-600 active:bg-primary-700 transition-all duration-300 hover:scale-105 hover:shadow-xl;
+    @apply inline-flex items-center justify-center px-6 py-2 min-h-[44px] bg-primary-500 text-white rounded-lg hover:bg-primary-600 active:bg-primary-700 transition-all duration-300 hover:scale-105 hover:shadow-xl;
   }
 
   .btn-danger {
-    @apply px-6 py-2 bg-error text-white rounded-lg hover:bg-error-dark transition-all duration-300 hover:scale-105 hover:shadow-xl;
+    @apply inline-flex items-center justify-center px-6 py-2 min-h-[44px] bg-error text-white rounded-lg hover:bg-error-dark transition-all duration-300 hover:scale-105 hover:shadow-xl;
   }
 
   /* Status indicators - using WindPalette colors */
