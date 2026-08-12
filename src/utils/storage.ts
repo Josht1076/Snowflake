@@ -217,6 +217,20 @@ export function setCurrentProjectId(id: string | null): void {
 }
 
 /**
+ * Duplicate a project with a new ID and title
+ */
+export function duplicateProject(project: Project): Project {
+  const now = new Date().toISOString();
+  return {
+    ...project,
+    id: `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    title: `${project.title} (Copy)`,
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
+/**
  * Create a new project with default structure
  */
 export function createNewProject(title: string): Project {

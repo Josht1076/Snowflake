@@ -50,7 +50,9 @@ export default function DiscoveryPage() {
 
   const handleQuizComplete = async (
     primaryGenreId: string | null,
-    secondaryGenreIds: string[]
+    secondaryGenreIds: string[],
+    primaryStcId: string | null,
+    secondaryStcId: string | null
   ) => {
     if (!project) return;
 
@@ -58,6 +60,8 @@ export default function DiscoveryPage() {
       ...project,
       primaryGenreId,
       secondaryGenreIds,
+      primaryStcId,
+      secondaryStcId,
     };
     setProject(updated);
     await saveProject(updated);
@@ -99,6 +103,19 @@ export default function DiscoveryPage() {
               project={project}
               onComplete={handleQuizComplete}
               onSkip={() => handleComplete(project)}
+              onEditManually={(result) => {
+                if (!project) return;
+                setProject({
+                  ...project,
+                  primaryGenreId: result.primaryGenreId,
+                  secondaryGenreIds: [result.secondaryGenreId, result.tertiaryGenreId].filter(
+                    Boolean
+                  ) as string[],
+                  primaryStcId: result.primaryStcId,
+                  secondaryStcId: result.secondaryStcId,
+                });
+                setStep('genre');
+              }}
             />
           )}
         </div>

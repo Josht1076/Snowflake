@@ -8,12 +8,14 @@ interface NavigationProps {
   showBackToProjects?: boolean;
   projectId?: string;
   isSaving?: boolean;
+  onOpenSettings?: () => void;
 }
 
 export default function Navigation({
   showBackToProjects = true,
   projectId,
   isSaving = false,
+  onOpenSettings,
 }: NavigationProps) {
   const pathname = usePathname();
 
@@ -60,6 +62,15 @@ export default function Navigation({
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {isStructure && projectId && onOpenSettings && (
+              <button
+                type="button"
+                onClick={onOpenSettings}
+                className="text-sm text-gray-300 hover:text-white transition-colors min-h-[44px] flex items-center"
+              >
+                Settings
+              </button>
+            )}
             {isStructure && projectId && (
               <Link
                 href={`/revision?project=${projectId}`}

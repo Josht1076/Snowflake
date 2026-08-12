@@ -1,29 +1,43 @@
 'use client';
 
 import { getGenreById } from '@/data/genres';
-import { mapGenreNameToId } from '@/utils/quizScoring';
+import { getStcArchetypeById } from '@/data/stcArchetypes';
 
 interface QuizResultsProps {
-  module1Result: {
+  result: {
     primaryGenreId: string | null;
     secondaryGenreId: string | null;
     tertiaryGenreId: string | null;
-    scores: Record<string, number>;
+    primaryStcId: string | null;
+    secondaryStcId: string | null;
   };
-  onConfirm: (primaryGenreId: string | null, secondaryGenreIds: string[]) => void;
+  onConfirm: (
+    primaryGenreId: string | null,
+    secondaryGenreIds: string[],
+    primaryStcId: string | null,
+    secondaryStcId: string | null
+  ) => void;
   onEdit: () => void;
 }
 
-export default function QuizResults({ module1Result, onConfirm, onEdit }: QuizResultsProps) {
-  const { primaryGenreId, secondaryGenreId, tertiaryGenreId } = module1Result;
+export default function QuizResults({ result, onConfirm, onEdit }: QuizResultsProps) {
+  const {
+    primaryGenreId,
+    secondaryGenreId,
+    tertiaryGenreId,
+    primaryStcId,
+    secondaryStcId,
+  } = result;
 
   const primaryGenre = primaryGenreId ? getGenreById(primaryGenreId) : null;
   const secondaryGenre = secondaryGenreId ? getGenreById(secondaryGenreId) : null;
   const tertiaryGenre = tertiaryGenreId ? getGenreById(tertiaryGenreId) : null;
+  const primaryArchetype = primaryStcId ? getStcArchetypeById(primaryStcId) : null;
+  const secondaryArchetype = secondaryStcId ? getStcArchetypeById(secondaryStcId) : null;
 
   const handleConfirm = () => {
     const secondaryIds = [secondaryGenreId, tertiaryGenreId].filter(Boolean) as string[];
-    onConfirm(primaryGenreId, secondaryIds);
+    onConfirm(primaryGenreId, secondaryIds, primaryStcId, secondaryStcId);
   };
 
   return (
@@ -59,23 +73,32 @@ export default function QuizResults({ module1Result, onConfirm, onEdit }: QuizRe
             <p className="quiz-result-description">{tertiaryGenre.description}</p>
           </div>
         )}
+
+        {primaryArchetype && (
+          <div className="quiz-result-primary">
+            <h3 className="quiz-result-title">Primary STC Archetype</h3>
+            <p className="quiz-result-name">{primaryArchetype.name}</p>
+            <p className="quiz-result-description">{primaryArchetype.description}</p>
+          </div>
+        )}
+
+        {secondaryArchetype && (
+          <div className="quiz-result-secondary">
+            <h3 className="quiz-result-title">Secondary STC Archetype</h3>
+            <p className="quiz-result-name">{secondaryArchetype.name}</p>
+            <p className="quiz-result-description">{secondaryArchetype.description}</p>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-4">
-        <button
-          onClick={handleConfirm}
-          className="btn-primary-action"
-        >
+        <button onClick={handleConfirm} className="btn-primary-action">
           Use These Results
         </button>
-        <button
-          onClick={onEdit}
-          className="btn-secondary-action"
-        >
+        <button onClick={onEdit} className="btn-secondary-action">
           Edit Manually
         </button>
       </div>
     </div>
   );
 }
-
