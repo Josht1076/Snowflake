@@ -2,28 +2,36 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import AutosaveIndicator from '@/components/common/AutosaveIndicator';
 
 interface NavigationProps {
   showBackToProjects?: boolean;
+  projectId?: string;
+  isSaving?: boolean;
 }
 
-export default function Navigation({ showBackToProjects = true }: NavigationProps) {
+export default function Navigation({
+  showBackToProjects = true,
+  projectId,
+  isSaving = false,
+}: NavigationProps) {
   const pathname = usePathname();
-  
-  // Don't show navigation on home page or login page
+
   if (pathname === '/' || pathname === '/login') {
     return null;
   }
 
+  const isStructure = pathname === '/structure';
+  const isRevision = pathname === '/revision';
+
   return (
     <nav className="border-b border-gray-800 bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
-          {/* Left: Back to Projects */}
+        <div className="flex items-center justify-between h-14 gap-4">
           {showBackToProjects && (
             <Link
               href="/"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors shrink-0"
             >
               <svg
                 className="w-5 h-5"
@@ -42,7 +50,6 @@ export default function Navigation({ showBackToProjects = true }: NavigationProp
             </Link>
           )}
 
-          {/* Center: App Name (optional, can be hidden on mobile) */}
           <div className="hidden sm:block flex-1 text-center">
             <Link
               href="/"
@@ -52,8 +59,25 @@ export default function Navigation({ showBackToProjects = true }: NavigationProp
             </Link>
           </div>
 
-          {/* Right: Spacer for alignment */}
-          <div className="flex-1 sm:hidden" />
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {isStructure && projectId && (
+              <Link
+                href={`/revision?project=${projectId}`}
+                className="text-sm text-gray-300 hover:text-white transition-colors min-h-[44px] flex items-center"
+              >
+                Revision
+              </Link>
+            )}
+            {isRevision && projectId && (
+              <Link
+                href={`/structure?project=${projectId}`}
+                className="text-sm text-gray-300 hover:text-white transition-colors min-h-[44px] flex items-center"
+              >
+                Structure
+              </Link>
+            )}
+            {isStructure && <AutosaveIndicator isSaving={isSaving} />}
+          </div>
         </div>
       </div>
     </nav>

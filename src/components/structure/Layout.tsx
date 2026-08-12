@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Project } from '@/types/project';
-import Sidebar from './Sidebar';
+import Sidebar, { SidebarTab } from './Sidebar';
 import MainPanel from './MainPanel';
 import TipsPanel from './TipsPanel';
 import MobileDrawer from './MobileDrawer';
@@ -11,42 +11,94 @@ import Navigation from '@/components/common/Navigation';
 interface LayoutProps {
   project: Project;
   onProjectUpdate: (project: Project) => void;
+  isSaving?: boolean;
 }
 
-export default function Layout({ project, onProjectUpdate }: LayoutProps) {
+export default function Layout({ project, onProjectUpdate, isSaving = false }: LayoutProps) {
   const [selectedStep, setSelectedStep] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<'snowflake' | 'scenes'>('snowflake');
+  const [selectedTab, setSelectedTab] = useState<SidebarTab>('snowflake');
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
+  const [selectedBeatId, setSelectedBeatId] = useState<string | null>(null);
   const [mobileLeftOpen, setMobileLeftOpen] = useState(false);
   const [mobileRightOpen, setMobileRightOpen] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab') as SidebarTab | null;
+    const step = params.get('step');
+    const beat = params.get('beat');
+    const scene = params.get('scene');
+
+    if (tab === 'scenes' || tab === 'stc' || tab === 'snowflake') {
+      setSelectedTab(tab);
+    }
+    if (step) {
+      setSelectedTab('snowflake');
+      setSelectedStep(step);
+    }
+    if (beat) {
+      setSelectedTab('stc');
+      setSelectedBeatId(beat);
+    }
+    if (scene) {
+      setSelectedTab('scenes');
+      setSelectedSceneId(scene);
+    }
+  }, []);
 
   const handleNavigate = (type: 'snowflake' | 'stc' | 'scene', id: string) => {
     if (type === 'snowflake') {
       setSelectedTab('snowflake');
       setSelectedStep(id);
       setSelectedSceneId(null);
+      setSelectedBeatId(null);
       setMobileLeftOpen(false);
     } else if (type === 'scene') {
       setSelectedTab('scenes');
       setSelectedSceneId(id);
       setSelectedStep(null);
+      setSelectedBeatId(null);
       setMobileLeftOpen(false);
     } else if (type === 'stc') {
-      // STC beats are not directly editable yet, but we can show a message
-      // or switch to scenes tab if needed
-      setSelectedTab('snowflake');
+      setSelectedTab('stc');
+      setSelectedBeatId(id);
       setSelectedStep(null);
       setSelectedSceneId(null);
       setMobileLeftOpen(false);
     }
   };
 
+  const sidebarProps = {
+    project,
+    selectedTab,
+    selectedStep,
+    selectedBeatId,
+    selectedSceneId,
+    onTabChange: setSelectedTab,
+    onStepSelect: (stepId: string) => {
+      setSelectedStep(stepId);
+      setSelectedBeatId(null);
+      setSelectedSceneId(null);
+      setMobileLeftOpen(false);
+    },
+    onBeatSelect: (beatId: string) => {
+      setSelectedBeatId(beatId);
+      setSelectedStep(null);
+      setSelectedSceneId(null);
+      setMobileLeftOpen(false);
+    },
+    onSceneSelect: (sceneId: string) => {
+      setSelectedSceneId(sceneId);
+      setSelectedStep(null);
+      setSelectedBeatId(null);
+      setMobileLeftOpen(false);
+    },
+  };
+
   return (
     <div className="layout-container">
-      {/* Navigation */}
-      <Navigation />
-      
-      {/* Mobile Toggle Buttons */}
+      <Navigation projectId={project.id} isSaving={isSaving} />
+
       <div className="md:hidden flex items-center justify-between p-2 border-b border-gray-800 bg-gray-900">
         <button
           onClick={() => setMobileLeftOpen(true)}
@@ -56,7 +108,7 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-          <span>Steps</span>
+          <span>Menu</span>
         </button>
         <button
           onClick={() => setMobileRightOpen(true)}
@@ -70,61 +122,40 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
         </button>
       </div>
 
-      {/* Main Content Area */}
       <div className="layout-main">
-        {/* Left Sidebar - Desktop */}
         <div className="layout-sidebar hidden md:block">
-          <Sidebar
-            project={project}
-            selectedTab={selectedTab}
-            selectedStep={selectedStep}
-            onTabChange={setSelectedTab}
-            onStepSelect={(stepId) => {
-              setSelectedStep(stepId);
-              setMobileLeftOpen(false);
-            }}
-          />
+          <Sidebar {...sidebarProps} />
         </div>
 
-        {/* Left Sidebar - Mobile Drawer */}
         <MobileDrawer
           isOpen={mobileLeftOpen}
           onClose={() => setMobileLeftOpen(false)}
           side="left"
         >
-          <Sidebar
-            project={project}
-            selectedTab={selectedTab}
-            selectedStep={selectedStep}
-            onTabChange={setSelectedTab}
-            onStepSelect={(stepId) => {
-              setSelectedStep(stepId);
-              setMobileLeftOpen(false);
-            }}
-          />
+          <Sidebar {...sidebarProps} />
         </MobileDrawer>
 
-        {/* Center: Main Panel */}
         <div className="layout-content">
           <MainPanel
             project={project}
             selectedStep={selectedStep}
             selectedTab={selectedTab}
+            selectedBeatId={selectedBeatId}
             onProjectUpdate={onProjectUpdate}
             onNavigate={handleNavigate}
             selectedSceneId={selectedSceneId}
           />
         </div>
 
-        {/* Right Sidebar: Tips - Desktop */}
         <div className="layout-panel hidden md:flex">
           <TipsPanel
             project={project}
             selectedStep={selectedStep}
+            selectedTab={selectedTab}
+            selectedSceneId={selectedSceneId}
           />
         </div>
 
-        {/* Right Sidebar: Tips - Mobile Drawer */}
         <MobileDrawer
           isOpen={mobileRightOpen}
           onClose={() => setMobileRightOpen(false)}
@@ -133,10 +164,11 @@ export default function Layout({ project, onProjectUpdate }: LayoutProps) {
           <TipsPanel
             project={project}
             selectedStep={selectedStep}
+            selectedTab={selectedTab}
+            selectedSceneId={selectedSceneId}
           />
         </MobileDrawer>
       </div>
     </div>
   );
 }
-

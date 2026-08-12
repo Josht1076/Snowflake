@@ -6,6 +6,8 @@ import { getAllProjects } from '@/utils/storage';
 import { Project } from '@/types/project';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
+import ImportButton from '@/components/common/ImportButton';
+import ExportButton from '@/components/common/ExportButton';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -14,13 +16,11 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to login if not authenticated
     if (!authLoading && !user) {
       router.push('/login');
       return;
     }
 
-    // Load projects when authenticated
     if (user) {
       loadProjects();
     }
@@ -76,14 +76,12 @@ export default function Home() {
             </div>
           )}
         </div>
-        
-        <div className="mb-8">
-          <Link
-            href="/discovery"
-            className="btn-primary-action"
-          >
+
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
+          <Link href="/discovery" className="btn-primary-action text-center">
             New Project
           </Link>
+          <ImportButton onImported={() => loadProjects()} />
         </div>
 
         {projects.length > 0 && (
@@ -91,16 +89,25 @@ export default function Home() {
             <h2 className="page-section-heading">Your Projects</h2>
             <div className="grid gap-4">
               {projects.map((project) => (
-                <Link
-                  key={project.id}
-                  href={`/structure?project=${project.id}`}
-                  className="project-card"
-                >
-                  <h3 className="project-card-title">{project.title}</h3>
-                  <p className="project-card-meta">
-                    Last updated: {new Date(project.updatedAt).toLocaleDateString()}
-                  </p>
-                </Link>
+                <div key={project.id} className="project-card">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <Link href={`/structure?project=${project.id}`} className="flex-1">
+                      <h3 className="project-card-title">{project.title}</h3>
+                      <p className="project-card-meta">
+                        Last updated: {new Date(project.updatedAt).toLocaleDateString()}
+                      </p>
+                    </Link>
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        href={`/revision?project=${project.id}`}
+                        className="btn-secondary-action text-sm"
+                      >
+                        Revision
+                      </Link>
+                      <ExportButton project={project} compact />
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -115,4 +122,3 @@ export default function Home() {
     </main>
   );
 }
-

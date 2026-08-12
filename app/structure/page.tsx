@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useState, Suspense, useCallback } from 'react';
-import { getProject, saveProject } from '@/utils/storage';
+import { getProject } from '@/utils/storage';
 import { Project } from '@/types/project';
 import Layout from '@/components/structure/Layout';
+import { useDebouncedSave } from '@/hooks/useDebouncedSave';
 
 export const dynamic = 'force-dynamic';
 
 function StructureContent() {
-  const [projectId, setProjectId] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isSaving, scheduleSave } = useDebouncedSave();
 
   useEffect(() => {
     const loadProject = async () => {
@@ -18,7 +19,6 @@ function StructureContent() {
         typeof window !== 'undefined'
           ? new URLSearchParams(window.location.search).get('project')
           : null;
-      setProjectId(id);
 
       if (id) {
         const loaded = await getProject(id);
@@ -30,40 +30,44 @@ function StructureContent() {
     loadProject();
   }, []);
 
-  // Auto-save project when it's updated
-  const handleProjectUpdate = useCallback(async (updatedProject: Project) => {
-    setProject(updatedProject);
-    try {
-      await saveProject(updatedProject);
-    } catch (error) {
-      console.error('Error auto-saving project:', error);
-    }
-  }, []);
+  const handleProjectUpdate = useCallback(
+    (updatedProject: Project) => {
+      setProject(updatedProject);
+      scheduleSave(updatedProject);
+    },
+    [scheduleSave]
+  );
 
   if (loading) {
     return (
-      <main className='loading-container'>
-        <div className='loading-content'>Loading...</div>
+      <main className="loading-container">
+        <div className="loading-content">Loading...</div>
       </main>
     );
   }
 
   if (!project) {
     return (
-      <main className='error-container'>
-        <div className='error-content'>
+      <main className="error-container">
+        <div className="error-content">
           <p>Project not found. Please create a new project.</p>
         </div>
       </main>
     );
   }
 
-  return <Layout project={project} onProjectUpdate={handleProjectUpdate} />;
+  return (
+    <Layout
+      project={project}
+      onProjectUpdate={handleProjectUpdate}
+      isSaving={isSaving}
+    />
+  );
 }
 
 export default function StructurePage() {
   return (
-    <Suspense fallback={<main className='loading-container'><div className='loading-content'>Loading...</div></main>}>
+    <Suspense fallback={<main className="loading-container"><div className="loading-content">Loading...</div></main>}>
       <StructureContent />
     </Suspense>
   );

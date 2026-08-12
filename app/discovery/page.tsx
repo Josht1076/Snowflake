@@ -23,13 +23,20 @@ export default function DiscoveryPage() {
     setStep('genre');
   };
 
-  const handleGenreSelected = async (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
+  const handleGenreSelected = async (
+    primaryGenreId: string | null,
+    secondaryGenreIds: string[],
+    primaryStcId: string | null,
+    secondaryStcId: string | null
+  ) => {
     if (!project) return;
 
     const updated = {
       ...project,
       primaryGenreId,
       secondaryGenreIds,
+      primaryStcId,
+      secondaryStcId,
     };
     setProject(updated);
     await saveProject(updated);
@@ -37,11 +44,14 @@ export default function DiscoveryPage() {
     if (showQuiz) {
       setStep('quiz');
     } else {
-      handleComplete();
+      handleComplete(updated);
     }
   };
 
-  const handleQuizComplete = async (primaryGenreId: string | null, secondaryGenreIds: string[]) => {
+  const handleQuizComplete = async (
+    primaryGenreId: string | null,
+    secondaryGenreIds: string[]
+  ) => {
     if (!project) return;
 
     const updated = {
@@ -51,14 +61,15 @@ export default function DiscoveryPage() {
     };
     setProject(updated);
     await saveProject(updated);
-    handleComplete();
+    handleComplete(updated);
   };
 
-  const handleComplete = () => {
-    if (!project) return;
+  const handleComplete = (currentProject?: Project) => {
+    const target = currentProject || project;
+    if (!target) return;
 
-    setCurrentProjectId(project.id);
-    router.push(`/structure?project=${project.id}`);
+    setCurrentProjectId(target.id);
+    router.push(`/structure?project=${target.id}`);
   };
 
   return (
@@ -68,31 +79,30 @@ export default function DiscoveryPage() {
         <div className="page-content max-w-3xl">
           <h1 className="page-heading-light">New Project</h1>
 
-        {step === 'form' && (
-          <NewProjectForm
-            onComplete={handleProjectCreated}
-            onRequestQuiz={() => setShowQuiz(true)}
-          />
-        )}
+          {step === 'form' && (
+            <NewProjectForm
+              onComplete={handleProjectCreated}
+              onRequestQuiz={() => setShowQuiz(true)}
+            />
+          )}
 
-        {step === 'genre' && project && (
-          <GenreSelector
-            project={project}
-            onSelect={handleGenreSelected}
-            onSkipQuiz={() => handleComplete()}
-          />
-        )}
+          {step === 'genre' && project && (
+            <GenreSelector
+              project={project}
+              onSelect={handleGenreSelected}
+              onSkipQuiz={() => handleComplete(project)}
+            />
+          )}
 
-        {step === 'quiz' && project && (
-          <QuizFlow
-            project={project}
-            onComplete={handleQuizComplete}
-            onSkip={() => handleComplete()}
-          />
-        )}
+          {step === 'quiz' && project && (
+            <QuizFlow
+              project={project}
+              onComplete={handleQuizComplete}
+              onSkip={() => handleComplete(project)}
+            />
+          )}
         </div>
       </main>
     </>
   );
 }
-

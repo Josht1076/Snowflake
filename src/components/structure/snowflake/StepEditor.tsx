@@ -2,7 +2,6 @@
 
 import { Project } from '@/types/project';
 import { snowflakeSteps } from '@/data/frameworks/snowflake';
-import { saveProject } from '@/utils/storage';
 import Step1Editor from './Step1Editor';
 import Step2Editor from './Step2Editor';
 import Step3Editor from './Step3Editor';
@@ -27,7 +26,7 @@ export default function StepEditor({ project, stepId, onProjectUpdate }: StepEdi
     status: 'not_started' as const,
   };
 
-  const handleUpdate = async (text: string, status: 'not_started' | 'in_progress' | 'complete') => {
+  const handleUpdate = (text: string, status: 'not_started' | 'in_progress' | 'complete') => {
     const updated = {
       ...project,
       snowflakeContent: {
@@ -39,7 +38,6 @@ export default function StepEditor({ project, stepId, onProjectUpdate }: StepEdi
         },
       },
     };
-    await saveProject(updated);
     onProjectUpdate(updated);
   };
 
