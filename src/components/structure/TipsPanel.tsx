@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import { Project } from '@/types/project';
 import { getGenreById } from '@/data/genres';
 import { getTipsForStep } from '@/utils/tipEngine';
+import { getStcBeatsForSnowflakeStep } from '@/data/frameworks/mapping_snowflake_stc';
+import { stcBeats } from '@/data/frameworks/stc';
 
 interface TipsPanelProps {
   project: Project;
@@ -21,6 +23,13 @@ export default function TipsPanel({ project, selectedStep }: TipsPanelProps) {
     selectedStep ? getTipsForStep(project, selectedStep) : { primary: [], secondary: [] },
     [project, selectedStep, project.snowflakeContent]
   );
+
+  const relatedStcBeats = useMemo(() => {
+    if (!selectedStep) return [];
+    return getStcBeatsForSnowflakeStep(selectedStep)
+      .map((beatId) => stcBeats.find((beat) => beat.id === beatId))
+      .filter((beat): beat is NonNullable<typeof beat> => beat !== undefined);
+  }, [selectedStep]);
 
   // Get character count from Step 3
   const characterCount = useMemo(() => {
@@ -55,6 +64,40 @@ export default function TipsPanel({ project, selectedStep }: TipsPanelProps) {
 
       {selectedStep && (
         <div className="space-y-4">
+          {relatedStcBeats.length > 0 && (() => {
+            const panelId = 'related-stc-beats';
+            const isCollapsed = collapsedPanels.has(panelId);
+            return (
+              <div className="card-blue">
+                <div className="flex items-center justify-between cursor-pointer" onClick={() => togglePanel(panelId)}>
+                  <h4 className="text-heading-3">Related STC Beats</h4>
+                  <button
+                    className="text-gray-400 hover:text-white transition-colors p-1"
+                    aria-label={isCollapsed ? 'Expand' : 'Collapse'}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      togglePanel(panelId);
+                    }}
+                  >
+                    <span className="text-lg">
+                      {isCollapsed ? '▶' : '▼'}
+                    </span>
+                  </button>
+                </div>
+                {!isCollapsed && (
+                  <ul className="list-item list-spacing mt-3">
+                    {relatedStcBeats.map((beat) => (
+                      <li key={beat.id}>
+                        <span className="text-heading-3 text-sm">{beat.title}</span>
+                        <p className="text-body-sm mt-1">{beat.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })()}
+
           {tips.primary.length > 0 && (() => {
             const panelId = 'step-tips';
             const isCollapsed = collapsedPanels.has(panelId);
