@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Project, SnowflakeStepContent } from '@/types/project';
-import { getStcBeatsForSnowflakeStep } from '@/data/frameworks/mapping_snowflake_stc';
 
 interface Step1EditorProps {
   project: Project;
@@ -28,8 +27,6 @@ export default function Step1Editor({ project, content, onUpdate }: Step1EditorP
   const handleComplete = () => {
     onUpdate(text, 'complete');
   };
-
-  const relevantBeats = getStcBeatsForSnowflakeStep('sf_step_1');
 
   return (
     <div className="section-spacing">
@@ -60,17 +57,6 @@ export default function Step1Editor({ project, content, onUpdate }: Step1EditorP
           </p>
         )}
       </div>
-
-      {relevantBeats.length > 0 && (
-        <div className="card-blue">
-          <h3 className="text-heading-3 mb-2">Related STC Beats</h3>
-          <ul className="list-item list-spacing">
-            {relevantBeats.map((beatId) => (
-              <li key={beatId}>• {beatId.replace('stc_', '').replace(/_/g, ' ')}</li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <div className="flex gap-4">
         <button
