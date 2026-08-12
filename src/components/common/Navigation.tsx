@@ -62,6 +62,7 @@ export default function Navigation({
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {isStructure && <AutosaveIndicator isSaving={isSaving} />}
             {isStructure && projectId && onOpenSettings && (
               <button
                 type="button"
@@ -87,7 +88,6 @@ export default function Navigation({
                 Structure
               </Link>
             )}
-            {isStructure && <AutosaveIndicator isSaving={isSaving} />}
           </div>
         </div>
       </div>
