@@ -48,7 +48,7 @@ export default function LoginPage() {
     return (
       <main className="page-container">
         <div className="page-content">
-          <div className="flex items-center justify-center min-h-screen">
+          <div className="flex items-center justify-center min-h-[50dvh]">
             <p>Loading...</p>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
   return (
     <main className="page-container">
       <div className="page-content">
-        <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center justify-center min-h-[50dvh]">
           <div className="max-w-md w-full space-y-8">
             <div className="text-center">
               <h1 className="page-heading-light">Snowflake Novel Planner</h1>

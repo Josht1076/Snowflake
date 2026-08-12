@@ -62,7 +62,7 @@ export default function Sidebar({
                 <button
                   key={step.id}
                   onClick={() => onStepSelect(step.id)}
-                  className={`w-full text-left p-3 rounded-lg transition-colors ${
+                  className={`w-full text-left p-3 min-h-[44px] rounded-lg transition-colors ${
                     selectedStep === step.id
                       ? 'card-selected'
                       : 'card-interactive'

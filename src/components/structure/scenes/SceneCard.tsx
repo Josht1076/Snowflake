@@ -12,7 +12,7 @@ export default function SceneCardComponent({ scene, isSelected, onClick }: Scene
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-3 rounded-lg transition-colors ${
+      className={`w-full text-left p-3 min-h-[44px] rounded-lg transition-colors ${
         isSelected ? 'card-selected' : 'card-interactive'
       }`}
     >
