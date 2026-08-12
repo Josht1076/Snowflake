@@ -82,23 +82,25 @@ export default function TipsPanel({
     children: React.ReactNode
   ) => {
     const isCollapsed = collapsedPanels.has(panelId);
+    const contentId = `${panelId}-content`;
+
     return (
       <div className={className}>
-        <div className="flex items-center justify-between cursor-pointer" onClick={() => togglePanel(panelId)}>
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-2 text-left min-h-[44px]"
+          aria-expanded={!isCollapsed}
+          aria-controls={contentId}
+          onClick={() => togglePanel(panelId)}
+        >
           <h4 className="text-heading-3">{title}</h4>
-          <button
-            className="text-gray-400 hover:text-white transition-colors p-1"
-            aria-label={isCollapsed ? 'Expand' : 'Collapse'}
-            aria-expanded={!isCollapsed}
-            onClick={(e) => {
-              e.stopPropagation();
-              togglePanel(panelId);
-            }}
-          >
-            <span className="text-lg">{isCollapsed ? '▶' : '▼'}</span>
-          </button>
+          <span className="text-gray-400 text-lg shrink-0" aria-hidden="true">
+            {isCollapsed ? '▶' : '▼'}
+          </span>
+        </button>
+        <div id={contentId} hidden={isCollapsed}>
+          {children}
         </div>
-        {!isCollapsed && children}
       </div>
     );
   };

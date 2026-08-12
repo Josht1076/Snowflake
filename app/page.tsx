@@ -40,7 +40,7 @@ export default function Home() {
 
   if (authLoading || loading) {
     return (
-      <main className="page-container">
+      <main id="main-content" className="page-container" tabIndex={-1}>
         <div className="page-content">
           <div className="flex items-center justify-center min-h-[50dvh]">
             <p>Loading...</p>
@@ -51,7 +51,7 @@ export default function Home() {
   }
 
   return (
-    <main className="page-container">
+    <main id="main-content" className="page-container" tabIndex={-1}>
       <div className="page-content">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
           <h1 className="page-heading !mb-0">Snowflake Novel Planner</h1>

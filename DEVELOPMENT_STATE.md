@@ -1,7 +1,7 @@
 # Snowflake Novel Planner - Development State
 
-**Last Updated:** 2024-12-19  
-**Version:** 0.2.0
+**Last Updated:** 2026-08-12  
+**Version:** 0.3.0
 
 ## Overview
 
@@ -300,26 +300,26 @@ This document provides a comprehensive review of the current development state o
   - ✅ Close handler
 
 ### Timeline Ribbon
-**Status: ✅ Completed**
+**Status: 🟡 Built, not mounted**
 
 - **Component** (`src/components/structure/TimelineRibbon.tsx`)
   - ✅ Act I/II/III visualization
   - ✅ Visual bands for each act
-  - ✅ Major beat markers mentioned
-  - ⚠️ Static display (doesn't highlight current step/beat)
-  - ⚠️ Beat markers not interactive
+  - ❌ Not rendered in `Layout.tsx` (hidden until interactive)
+  - ⚠️ Needs current step/beat highlighting and clickable markers before re-enabling
 
 ### Tips Panel
 **Status: ✅ Completed**
 
 - **Component** (`src/components/structure/TipsPanel.tsx`)
-  - ✅ Contextual tips based on step
-  - ✅ Primary tips (step + genre + STC)
+  - ✅ Contextual tips based on step, tab (Snowflake/STC/Scenes), genre, and STC archetype
+  - ✅ Related STC beats panel (moved from step editors)
+  - ✅ Primary tips (step + genre + STC archetype)
   - ✅ Secondary tips (alternate angles)
-  - ✅ Genre information display
+  - ✅ Scene planning guidance on Scenes tab
   - ✅ Character count for Step 3
-  - ✅ Collapsible panels
-  - ✅ Empty state when no step selected
+  - ✅ Collapsible panels with accessible button toggles
+  - ✅ Contextual empty states per tab
 
 ### Smart Next Button
 **Status: ✅ Completed**
@@ -478,13 +478,14 @@ This document provides a comprehensive review of the current development state o
   - ✅ Auto-hides on home and login pages
 
 - **Export Button** (`src/components/common/ExportButton.tsx`)
-  - ✅ Export functionality
-  - ✅ Project download
-  - ✅ JSON export
+  - ✅ Per-project JSON export on home page
+
+- **Import Button** (`src/components/common/ImportButton.tsx`)
+  - ✅ JSON import on home page with validation via `migrateProject()`
 
 - **Autosave Indicator** (`src/components/common/AutosaveIndicator.tsx`)
-  - ✅ File exists
-  - ⚠️ Not reviewed in detail (may need verification)
+  - ✅ Integrated in Structure navigation
+  - ✅ Paired with debounced saves (`useDebouncedSave`)
 
 ### Navigation
 **Status: ✅ Completed**
@@ -738,74 +739,79 @@ This document provides a comprehensive review of the current development state o
 
 ## 12. Known Issues & Gaps
 
+> **Doc refresh (2026-08-12):** This section reflects the current codebase after mobile improvements, STC editor, export/import, revision deep links, and accessibility pass.
+
 ### Critical Missing Features
 
-1. **🟡 STC Beat Editing**
-   - STC beats defined but not directly editable in Structure mode
-   - Beats only referenced in tips and mapping
-   - No dedicated STC beat editor interface
-   - **Priority: Medium** - Feature gap
-
-2. **🟡 Quiz Modules 2-8 Integration**
+1. **🟡 Quiz Modules 2-8 Integration**
    - All 8 quiz modules exist in data files
    - Only Module 1 is integrated into QuizFlow
    - Modules 2-8 not accessible in UI
-   - **Priority: Medium** - Incomplete feature
+   - **Priority: Medium** — incomplete feature
 
-3. **🟡 Timeline Ribbon Interactivity**
-   - Timeline ribbon is static
-   - Doesn't highlight current step/beat
-   - Beat markers not clickable
-   - **Priority: Low** - Enhancement
+2. **🟡 Timeline Ribbon**
+   - `TimelineRibbon.tsx` component exists but is **not mounted** in `Layout.tsx`
+   - Intentionally hidden until interactive (beat highlighting, click-to-navigate)
+   - **Priority: Low** — re-enable when interactivity is added
+
+### Recently Completed (formerly gaps)
+
+- **✅ STC Beat Editing** — STC tab in sidebar + `StcBeatEditor` writing to `project.stcContent`
+- **✅ Export / Import** — `ImportButton` + per-project `ExportButton` on home page
+- **✅ Autosave Indicator** — debounced saves in Structure mode via `useDebouncedSave`
+- **✅ Revision Deep Links** — health checks link to steps, beats, and scenes; nav links between Structure ↔ Revision
+- **✅ STC Archetype Selection** — `stcArchetypes.ts` + pickers in Discovery `GenreSelector`
+- **✅ Related STC Beats** — moved from step editors to Tips panel
+- **✅ Mobile Layout** — drawer sidebars, list-first scene editor, responsive padding
+- **✅ Scene Linking UX** — dropdown pickers for step/beat; sidebar scene clicks wired
 
 ### Technical Debt
 
-1. **⚠️ Import Utility**
-   - File exists but not reviewed
-   - May be incomplete or unused
-
-2. **⚠️ Autosave Indicator**
-   - Component exists but usage unclear
-   - May not be integrated
-
-3. **⚠️ Step 4 and 6 Editors**
+1. **⚠️ Step 4 and 6 Editors**
    - Use GenericStepEditor (intentional)
    - May benefit from specialized editors like other steps
 
-4. **⚠️ Scene Type Definition**
-   - SceneCard defined in project.ts
-   - scene.ts file exists (may be duplicate/unused)
+2. **⚠️ Scene Type Definition**
+   - `SceneCard` defined in `project.ts`
+   - `scene.ts` file may be duplicate/unused
 
-5. **⚠️ Code Comments**
-   - Inconsistent documentation
-   - Some complex logic needs comments
+3. **⚠️ No Automated Tests**
+   - No test runner configured
+   - Fixtures exist in `src/fixtures/` but are unused
 
-### Potential Bugs
-
-1. **✅ Login Page Styling** - Fixed
-   - Updated to use dark theme compatible classes
-   - All text colors updated for dark background
-   - Form inputs use `form-input` class
-
-2. **✅ User Menu Styling** - Fixed
-   - Text colors updated for dark theme
-   - Proper contrast with `text-gray-300` and hover states
-
-3. **⚠️ Middleware Redirects**
+4. **⚠️ Middleware Redirects**
    - Client-side redirects in components
    - May cause flash of content before redirect
 
 ### Integration Gaps
 
-1. **🟡 STC Beat Display in Step Editors**
-   - Framework mapping exists
-   - Not used to show related beats in step editors
-   - Missing visual integration
-
-2. **🟡 Quiz Flow Completion**
+1. **🟡 Quiz Flow Completion**
    - Only Module 1 integrated
-   - Modules 2-8 need integration
-   - Multi-module flow not implemented
+   - Modules 2-8 need multi-module flow in `QuizFlow.tsx`
+
+2. **🟡 Timeline Ribbon Interactivity**
+   - Component built; needs current-step highlighting and clickable beat markers before re-mounting
+
+---
+
+## 12a. Accessibility Status
+
+**Status: 🟡 Partial** (improved 2026-08-12)
+
+### Completed
+- Skip-to-main-content link on all pages (`SkipLink` → `#main-content`)
+- Tips panel collapsibles use `<button aria-expanded>` (not div click handlers)
+- Sidebar tabs: `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls`
+- Sidebar list items: `aria-current` for selected step/beat/scene; status dots have sr-only labels
+- Revision health checks: emoji icons `aria-hidden`; Pass/Warning/Fail sr-only text; semantic `<ul>` list
+- Mobile drawers: `role="dialog"`, `aria-modal`, focus trap, Escape to close; unmounted when closed
+- Navigation: `aria-label="Main navigation"`
+- Touch targets: 44px minimum on primary interactive elements
+
+### Remaining
+- No automated accessibility testing (axe, Lighthouse CI)
+- Quiz and discovery forms could use more `aria-describedby` for helper text
+- Focus management when switching sidebar tabs / opening scenes on mobile
 
 ---
 
@@ -1082,19 +1088,20 @@ translate-x-full  /* Closed (right) */
 |----------|--------|------------|
 | Core Infrastructure | ✅ | 100% |
 | Authentication & Storage | ✅ | 100% |
-| Discovery Mode | 🟡 | 85% |
+| Discovery Mode | 🟡 | 90% |
 | Structure Mode | ✅ | 100% |
 | Revision Mode | ✅ | 100% |
 | Data Models | ✅ | 100% |
 | UI/UX Components | ✅ | 100% |
-| Utilities & Helpers | ✅ | 95% |
+| Utilities & Helpers | ✅ | 100% |
 | Page Routes | ✅ | 100% |
-| Integration Points | 🟡 | 80% |
-| Documentation | ✅ | 90% |
+| Integration Points | 🟡 | 85% |
+| Accessibility | 🟡 | 75% |
+| Documentation | 🟡 | 85% |
 
-### Overall App Completion: ~95%
+### Overall App Completion: ~92%
 
-**Note:** Recent improvements include mobile responsiveness, navigation menu, styling fixes, and Smart Next Button integration.
+**Recent improvements (2026):** Mobile-responsive layout, STC beat editor, export/import, debounced autosave, revision deep links, STC archetype selection in Discovery, accessibility pass, timeline ribbon hidden pending interactivity.
 
 ---
 
@@ -1136,16 +1143,20 @@ translate-x-full  /* Closed (right) */
    - Implement multi-module progression
    - Update scoring to handle all modules
 
-2. **Add STC Beat Editing**
-   - Create STC beat editor component
-   - Add STC tab to Structure mode sidebar
-   - Integrate with framework mapping
-   - Show related beats in Snowflake step editors
-
-3. **Enhance Timeline Ribbon**
+2. **Re-enable Timeline Ribbon with Interactivity**
+   - Re-mount in Layout when ready
    - Add current step/beat highlighting
    - Make beat markers clickable
-   - Show progress indicators
+
+3. **Automated Test Suite**
+   - Add Vitest (or similar)
+   - Unit tests for `revisionChecks`, `quizScoring`, `migration`, `nextStepLogic`
+
+### Low Priority (Polish)
+
+1. **Accessibility automation** — axe/Lighthouse CI in build pipeline
+2. **Specialized editors for Steps 4 and 6**
+3. **Version history / multi-project dashboard** (future consideration)
 
 ### Low Priority (Enhancements)
 

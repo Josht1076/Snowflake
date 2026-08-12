@@ -75,7 +75,7 @@ export default function DiscoveryPage() {
   return (
     <>
       <Navigation />
-      <main className="page-container">
+      <main id="main-content" className="page-container" tabIndex={-1}>
         <div className="page-content max-w-3xl">
           <h1 className="page-heading-light">New Project</h1>
 
