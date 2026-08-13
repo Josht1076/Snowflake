@@ -6,7 +6,9 @@ import StepEditor from './snowflake/StepEditor';
 import SceneList from './scenes/SceneList';
 import StcBeatEditor from './stc/StcBeatEditor';
 import SmartNextButton from './SmartNextButton';
+import LinkedScenesPanel from './LinkedScenesPanel';
 import { SidebarTab } from './Sidebar';
+import { getScenesForSnowflakeStep, getScenesForStcBeat } from '@/utils/sceneLinks';
 
 interface MainPanelProps {
   project: Project;
@@ -60,6 +62,11 @@ export default function MainPanel({
           beat={beat}
           onProjectUpdate={onProjectUpdate}
         />
+        <LinkedScenesPanel
+          panelId={`stc-${selectedBeatId}`}
+          scenes={getScenesForStcBeat(project.scenes, selectedBeatId)}
+          onSceneSelect={(sceneId) => onNavigate('scene', sceneId)}
+        />
         <div className="mt-6">
           <SmartNextButton project={project} onNavigate={onNavigate} />
         </div>
@@ -83,6 +90,11 @@ export default function MainPanel({
         project={project}
         stepId={selectedStep}
         onProjectUpdate={onProjectUpdate}
+      />
+      <LinkedScenesPanel
+        panelId={`snowflake-${selectedStep}`}
+        scenes={getScenesForSnowflakeStep(project.scenes, selectedStep)}
+        onSceneSelect={(sceneId) => onNavigate('scene', sceneId)}
       />
       <div className="mt-6">
         <SmartNextButton project={project} onNavigate={onNavigate} />
