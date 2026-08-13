@@ -276,45 +276,45 @@ export const tips: Tip[] = [
     appliesToFrameworkSteps: ['sf_step_8'],
   },
 
-  // STEP 9 - Scene Expansion
-  {
-    id: 'tip-sf9-dramatize',
-    title: 'Dramatize, do not summarize',
-    body: 'Convert bullet points into lived moments with sensory detail and choice.',
-    appliesToFrameworkSteps: ['sf_step_9'],
-  },
-  {
-    id: 'tip-sf9-subtext',
-    title: 'Layer subtext',
-    body: 'Let characters want different things from the same scene.',
-    appliesToFrameworkSteps: ['sf_step_9'],
-  },
-  {
-    id: 'tip-sf9-echo-theme',
-    title: 'Reinforce the theme quietly',
-    body: 'Small choices should reflect the same moral questions as big ones.',
-    appliesToFrameworkSteps: ['sf_step_9'],
-  },
+  // STEP 9 - Scene Expansion (commented: snowflake.ts only defines steps 1–8 for now)
+  // {
+  //   id: 'tip-sf9-dramatize',
+  //   title: 'Dramatize, do not summarize',
+  //   body: 'Convert bullet points into lived moments with sensory detail and choice.',
+  //   appliesToFrameworkSteps: ['sf_step_9'],
+  // },
+  // {
+  //   id: 'tip-sf9-subtext',
+  //   title: 'Layer subtext',
+  //   body: 'Let characters want different things from the same scene.',
+  //   appliesToFrameworkSteps: ['sf_step_9'],
+  // },
+  // {
+  //   id: 'tip-sf9-echo-theme',
+  //   title: 'Reinforce the theme quietly',
+  //   body: 'Small choices should reflect the same moral questions as big ones.',
+  //   appliesToFrameworkSteps: ['sf_step_9'],
+  // },
 
-  // STEP 10 - First Draft
-  {
-    id: 'tip-sf10-finish-not-perfect',
-    title: 'Finish the draft',
-    body: 'A complete, imperfect draft is infinitely more valuable than a polished fragment.',
-    appliesToFrameworkSteps: ['sf_step_10'],
-  },
-  {
-    id: 'tip-sf10-trust-the-plan',
-    title: 'Trust the structure',
-    body: 'When stuck, return to earlier Snowflake steps. The answers are usually already there.',
-    appliesToFrameworkSteps: ['sf_step_10'],
-  },
-  {
-    id: 'tip-sf10-revision-mindset',
-    title: 'Drafting is discovery',
-    body: 'You are allowed to learn things while writing. Revisions exist for a reason.',
-    appliesToFrameworkSteps: ['sf_step_10'],
-  },
+  // STEP 10 - First Draft (commented: snowflake.ts only defines steps 1–8 for now)
+  // {
+  //   id: 'tip-sf10-finish-not-perfect',
+  //   title: 'Finish the draft',
+  //   body: 'A complete, imperfect draft is infinitely more valuable than a polished fragment.',
+  //   appliesToFrameworkSteps: ['sf_step_10'],
+  // },
+  // {
+  //   id: 'tip-sf10-trust-the-plan',
+  //   title: 'Trust the structure',
+  //   body: 'When stuck, return to earlier Snowflake steps. The answers are usually already there.',
+  //   appliesToFrameworkSteps: ['sf_step_10'],
+  // },
+  // {
+  //   id: 'tip-sf10-revision-mindset',
+  //   title: 'Drafting is discovery',
+  //   body: 'You are allowed to learn things while writing. Revisions exist for a reason.',
+  //   appliesToFrameworkSteps: ['sf_step_10'],
+  // },
 
   // -------------------------
   // Genre tips (your existing)
@@ -455,28 +455,28 @@ export const tips: Tip[] = [
     title: 'Add a ticking clock',
     body: 'Survivor stories thrive on urgency: infection spread, oxygen loss, pursuit radius, deadline, or exposure risk.',
     appliesToPrimaryStc: ['stc-dude-with-a-problem'],
-    appliesToGenres: ['thrust-into-chaos-survivor'],
+    appliesToGenres: ['thrust-into-chaos'],
   },
   {
     id: 'tip-stc-dude-problem-learning-curve',
     title: 'Make competence earned',
     body: 'Show mistakes, adaptation, and hard lessons. Readers root for growth more than effortless skill.',
     appliesToPrimaryStc: ['stc-dude-with-a-problem'],
-    appliesToGenres: ['thrust-into-chaos-survivor'],
+    appliesToGenres: ['thrust-into-chaos'],
   },
   {
     id: 'tip-stc-dude-problem-toolbox',
     title: 'Give them a limited toolbox',
     body: 'Restrict resources: one weapon, one ally, one safe place, one lie. Constraints create clever solutions and tension.',
     appliesToPrimaryStc: ['stc-dude-with-a-problem'],
-    appliesToGenres: ['thrust-into-chaos-survivor'],
+    appliesToGenres: ['thrust-into-chaos'],
   },
   {
     id: 'tip-stc-dude-problem-bigger-picture',
     title: 'Reveal the real problem late',
     body: 'Start with the obvious crisis, then unveil the deeper cause: conspiracy, hidden ecosystem, political motive, or cosmic rule.',
     appliesToPrimaryStc: ['stc-dude-with-a-problem'],
-    appliesToGenres: ['thrust-into-chaos-survivor'],
+    appliesToGenres: ['thrust-into-chaos'],
   },
 
   // 5) RITES OF PASSAGE -> Inner Metamorphosis
@@ -575,28 +575,28 @@ export const tips: Tip[] = [
     title: 'Give them a "small" superpower',
     body: 'Kindness, humor, patience, weird expertise, social perception - something dismissed as weak that becomes decisive.',
     appliesToPrimaryStc: ['stc-fool-triumphant'],
-    appliesToGenres: ['the-emergent-hero'],
+    appliesToGenres: ['emergent-hero'],
   },
   {
     id: 'tip-stc-fool-underestimate',
     title: 'Let the world underestimate them',
     body: 'Repeated underestimation creates catharsis. The turn works best when others see the hero clearly - too late.',
     appliesToPrimaryStc: ['stc-fool-triumphant'],
-    appliesToGenres: ['the-emergent-hero'],
+    appliesToGenres: ['emergent-hero'],
   },
   {
     id: 'tip-stc-fool-earned-respect',
     title: 'Earn respect through action',
     body: 'Do not rely on speeches. Prove worth through choices that cost them comfort, pride, or safety.',
     appliesToPrimaryStc: ['stc-fool-triumphant'],
-    appliesToGenres: ['the-emergent-hero'],
+    appliesToGenres: ['emergent-hero'],
   },
   {
     id: 'tip-stc-fool-win-style',
     title: 'Win in their own style',
     body: 'The finale should hinge on what makes them small. If they win by becoming someone else, you lose the point.',
     appliesToPrimaryStc: ['stc-fool-triumphant'],
-    appliesToGenres: ['the-emergent-hero'],
+    appliesToGenres: ['emergent-hero'],
   },
 
   // 9) INSTITUTIONALIZED -> Defying the Order
@@ -605,28 +605,28 @@ export const tips: Tip[] = [
     title: 'Define the institution ideology',
     body: 'Not just rules - beliefs. What good does the system claim to serve, and what does it demand in return?',
     appliesToPrimaryStc: ['stc-institutionalized'],
-    appliesToGenres: ['defying-the-order'],
+    appliesToGenres: ['defying-order'],
   },
   {
     id: 'tip-stc-institutionalized-temptation',
     title: 'Make conformity tempting',
     body: 'Safety, status, belonging, purpose. The best resistance stories admit why people stay.',
     appliesToPrimaryStc: ['stc-institutionalized'],
-    appliesToGenres: ['defying-the-order'],
+    appliesToGenres: ['defying-order'],
   },
   {
     id: 'tip-stc-institutionalized-cost',
     title: 'Resistance should cost something real',
     body: 'Loss of identity, family, rank, access, or home. Sacrifice is what proves conviction.',
     appliesToPrimaryStc: ['stc-institutionalized'],
-    appliesToGenres: ['defying-the-order'],
+    appliesToGenres: ['defying-order'],
   },
   {
     id: 'tip-stc-institutionalized-endgame',
     title: 'Choose an endgame: escape, reform, or burn it down',
     body: 'Clarity matters. Each option demands different scenes, allies, and moral compromises.',
     appliesToPrimaryStc: ['stc-institutionalized'],
-    appliesToGenres: ['defying-the-order'],
+    appliesToGenres: ['defying-order'],
   },
 
   // 10) SUPERHERO -> Burdened Prodigy
