@@ -15,6 +15,7 @@ export const snowflakeStcMapping: FrameworkMapping[] = [
     stcBeatIds: [
       'stc_setup',
       'stc_catalyst',
+      'stc_debate',
       'stc_break_into_two',
       'stc_midpoint',
       'stc_all_is_lost',
@@ -30,6 +31,7 @@ export const snowflakeStcMapping: FrameworkMapping[] = [
     stcBeatIds: [
       'stc_setup',
       'stc_catalyst',
+      'stc_debate',
       'stc_break_into_two',
       'stc_fun_and_games',
       'stc_midpoint',
@@ -47,6 +49,7 @@ export const snowflakeStcMapping: FrameworkMapping[] = [
     stcBeatIds: [
       'stc_setup',
       'stc_catalyst',
+      'stc_debate',
       'stc_break_into_two',
       'stc_fun_and_games',
       'stc_midpoint',
@@ -73,6 +76,7 @@ export const snowflakeStcMapping: FrameworkMapping[] = [
       'stc_opening_image',
       'stc_setup',
       'stc_catalyst',
+      'stc_debate',
       'stc_break_into_two',
       'stc_fun_and_games',
       'stc_midpoint',
